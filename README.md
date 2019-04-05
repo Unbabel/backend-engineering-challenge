@@ -1,11 +1,11 @@
-# Data Engineering Challenge
+# Bakckend Engineering Challenge
 
 
-Welcome to our Data Engineering Challenge repository 🖖
+Welcome to our Engineering Challenge repository 🖖
 
-If you found this repository it probably means that you are participating in our recruitment process. Thank you for your time and energy. If that's not the case please take a look at our [opening](https://jobs.lever.co/unbabel/2e537b5d-5e6c-40f2-a357-819815e8543f) and apply!
+If you found this repository it probably means that you are participating in our recruitment process. Thank you for your time and energy. If that's not the case please take a look at our [openings](https://unbabel.com/careers/) and apply!
 
-Please fork this repo before you start working on the challenge, read it careful and take your time and think about the solution. Also, please for this repository because we will evaluate the code on the fork.
+Please fork this repo before you start working on the challenge, read it careful and take your time and think about the solution. Also, please fork this repository because we will evaluate the code on the fork.
 
 This is an opportunity for us both to work together and get to know each other in a more technical way. If have some doubt please open and issue and we'll reach out to help.
 
@@ -73,12 +73,10 @@ The output file would be something in the following format.
 Before jumping right into implementation we advise you to think about the solution first. We will evaluate, not only if your solution works but also the following aspects:
 
 + Simple and easy to read code. Remember that [simple is not easy](https://www.infoq.com/presentations/Simple-Made-Easy)
-+ Always keep in mind the SOLID principles
-+ Always test your code and remember that tests are also a form of documentation. [The magic of testing](https://www.youtube.com/watch?v=URSWYvyc42M)
-+ Make your application modular and easy to extend. [Clean Architecture](http://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
++ Include a README.md that briefly describes how to build and run your code
 + Be consistent in your code. 
 
-We want you to solve this challenge in the language you feel most confortable with. Our machines run Python, Ruby, Scala, Java, Clojure, Elixir and Nodejs. If you are thinking of using any other programming language please reach out to us first 🙏.
+Feel free to, in your solution, include some your considerations while doing this challenge. We want you to solve this challenge in the language you feel most confortable with. Our machines run Python, Ruby, Scala, Java, Clojure, Elixir and Nodejs. If you are thinking of using any other programming language please reach out to us first 🙏.
 
 Also if you have any problem please **open an issue**. 
 
