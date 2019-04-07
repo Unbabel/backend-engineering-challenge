@@ -86,3 +86,21 @@ Good luck and may the force be with you
 
 If you feeling creative feel free to consider any additional cases you might find interesting. Remember this is a bonus, focus on delivering the solution first.
 
+# Asghar Syed's Added
+
+## Solution - How it Works
+I am submitting a python file: unbabel-cli.py
+As it is python, the command can be like: 
+```python unbabel-cli.py input-filename total-minutes```
+
+The ```input-filename``` can name any text file containing json, as in above sample input pattern. 
+```total-minutes``` can be a valid positive integer. 
+The script will output the result json into a file: ```output.json```
+
+## Extra Points
+Extra points are always my **most cherished** points, so, I added additional output to list the **requested language-sets trend**. The trending language-sets will be summarized under the command line, showing up to three top trendng language-sets, and will be detailed in the ```output.json```
+
+## Extra Favor (to me, of course!)
+I know, I have added comments more than I would do normally. I would myself look at this code some day, and yell ```Shut-up and let me see it myself```. But, please understand my position. Who knows what 'unnecessary' is 'necessary' for whom. So, please, overlook such comments where you find any of them unnecessary.
+
+Best regards.
