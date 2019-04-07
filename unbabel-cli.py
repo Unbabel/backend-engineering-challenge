@@ -3,7 +3,6 @@ Your mission is to build a simple command line application that parses a stream
 of events and produces an aggregated output. In this case, we're instered in
 calculating, for every minute, a moving average of the translation delivery
 time for the last X minutes.
-
 The input file format would be something like:
 {"timestamp": "2018-12-26 18:11:08.509654","translation_id": "5aa5b2f39f7254a75
 aa5","source_language": "en","target_language": "fr","client_name": "easyjet",
@@ -14,7 +13,6 @@ aa4","source_language": "en","target_language": "fr","client_name": "easyjet",
 {"timestamp": "2018-12-26 18:23:19.903159","translation_id": "5aa5b2f39f7254a75
 bb33","source_language": "en","target_language": "fr","client_name": "booking",
 "event_name": "translation_delivered","nr_words": 100, "duration": 54}
-
 The output file should be something in the following format.
 {"date": "2018-12-26 18:11:00", "average_delivery_time": 0}
 {"date": "2018-12-26 18:12:00", "average_delivery_time": 20}
@@ -135,10 +133,10 @@ def avg_delivery_time(inputfile, total_minutes):
 
     if(this_minute_count):
         # Most Popular Lang-Sets
-        lang_trend_sorted = sorted(lang_trend, key=lambda x: (-lang_trend[x], x))
+        sorted_trend = sorted(lang_trend, key=lambda x: (-lang_trend[x], x))
 
         print("\nTrending Language Sets:")
-        for lang_set in lang_trend_sorted[0:3]:
+        for lang_set in sorted_trend[0:3]:
             print(lang_set)
 
         print("\nDetailed output in output.json, updated!")
