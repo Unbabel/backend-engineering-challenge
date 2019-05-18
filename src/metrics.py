@@ -1,10 +1,13 @@
+from numbers import Number
 from datetime import datetime, timedelta
-from Queue import Queue
+from queue import Queue
 
 class Metrics:
-    def __init__(self, source, window_size):
+    def __init__(self, source, window_size, buffer_output=False):
         self.source = source
         self.open = True
+        self.buffer_output = buffer_output
+        self.buffer = []
         self.count = 0
         self.sum = 0
         self.history = Queue(window_size)
@@ -22,17 +25,26 @@ class Metrics:
         while self.open:
             self.next()
 
+    def parse_entry(self, entry):
+        try:
+            assert isinstance(entry['duration'], Number)
+            new_time = self.parse_time(entry['timestamp'])
+        except:
+            raise AssertionError('Entry {} has invalid duration'.format(entry))
+        if new_time < self.current['time']:
+            raise AssertionError('Entry {} is out of order'.format(entry))
+        return new_time, entry['duration']
+
     def read_source(self):
         try:
-            entry = self.source.next()
-            new_time = self.parse_time(entry['timestamp'])
-            if new_time < self.current['time']:
-                raise AssertionError('Entries given out of order')
-            duration = entry['duration']
+            entry = next(self.source)
+            new_time, duration = self.parse_entry(entry)
         except StopIteration:
             new_time = self.current['time'] + timedelta(minutes=1)
             duration = 0
             self.open = False
+        except:
+            raise AssertionError('Failed to read source')
         return new_time, duration
 
     def next(self):
@@ -65,5 +77,12 @@ class Metrics:
         average_delivery_time = self.calculate_metrics()
         date_string = datetime.strftime(self.current['time'], '%Y-%m-%d %H:%M:%S')
         metrics = {'date': date_string, 'average_delivery_time': average_delivery_time}
-        print(metrics)
-        return metrics
+        if self.buffer_output:
+            self.buffer.append(metrics)
+        else:
+            print(metrics)
+
+    def flush_buffer(self):
+        for entry in self.buffer:
+            print(entry)
+        self.buffer = []
