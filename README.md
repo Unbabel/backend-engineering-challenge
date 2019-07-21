@@ -86,3 +86,18 @@ Good luck and may the force be with you
 
 If you feeling creative feel free to consider any additional cases you might find interesting. Remember this is a bonus, focus on delivering the solution first.
 
+## Solution
+
+Installing requirements:
+```
+pip install -r requirements.txt
+```
+
+Usage:
+```
+python unbabel_cli.py [-h] -i INPUT_FILE -w WINDOW_SIZE [-o OUTPUT_FILE]
+```
+Example:
+```
+python unbabel_cli.py --input_file input.json --window_size 10
+```
