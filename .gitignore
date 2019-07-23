@@ -1,0 +1,11 @@
+### Django ### 
+*.log
+*.pot
+*.pyc
+__pycache__/
+
+### Pycharm project folder ###
+.idea/
+
+### Event files for testing ###
+events*.json
