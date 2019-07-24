@@ -23,7 +23,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--window_size",
-        help="Size of the window to print in seconds",
+        help="Size of the window to print in minutes",
         type=int,
         required=True,
     )
