@@ -86,3 +86,38 @@ Good luck and may the force be with you
 
 If you feeling creative feel free to consider any additional cases you might find interesting. Remember this is a bonus, focus on delivering the solution first.
 
+#### Implementation
+
+I used Python 3 for the implementation.
+
+There are no dependencies for running the application, and there is only one dependency to run the tests.
+
+[Python 3](https://www.python.org/) is required to run.
+
+
+##### Installing dependencies for and running tests
+
+The tests have a single dependency, [pytest](https://pytest.org/en/latest/), to install it you can simply run:
+
+```
+pip3 install -r requirements-dev.txt
+```
+
+The tests can be run with the following command:
+
+```
+python3 -m pytest
+```
+
+Note: Verbosity can be added to the test execution by using -v
+
+
+##### Command execution
+
+The application can be ran for example with:
+
+```
+python3 unbabel_cli.py --input_file events.json --window_size 10
+```
+
+The command input and output follow the specifications in Challenge Objective.
