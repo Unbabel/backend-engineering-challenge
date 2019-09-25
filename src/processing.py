@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import numpy as np
 import warnings
 
-warnings.simplefilter(action='ignore', category=UserWarning)
+warnings.simplefilter(action="ignore", category=UserWarning)
 
 
 def moving_averages(events: DataFrame, window_size: int) -> List[Dict[Text, Any]]:

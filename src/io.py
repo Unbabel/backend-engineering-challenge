@@ -1,5 +1,5 @@
 import json
-from typing import Text, List, Dict, Any
+from typing import Text, List, Dict, Any, Optional
 from pandas import DataFrame
 from datetime import datetime
 import logging
@@ -8,29 +8,34 @@ import os
 INPUT_TIMESTAMP_STR = "%Y-%m-%d %H:%M:%S.%f"
 OUTPUT_TIMESTAMP_STR = "%Y-%m-%d %H:%M:%S"
 
+EXPECTED_KEYS = (
+    "timestamp",
+    "translation_id",
+    "source_language",
+    "target_language",
+    "client_name",
+    "event_name",
+    "nr_words",
+    "duration",
+)
+
 
 class UnknownFormatError(BaseException):
-    """Error raised when input file is not JSON standard."""
+    """Error raised when input file is not standard."""
 
-    def __init__(self, filepath: Text, error: json.JSONDecodeError):
+    def __init__(self, filepath: Text, reason: Text):
         self.filepath = filepath
-        self.error = error
+        self.reason = reason
 
     def __str__(self):
-        message = (
-            "Failed to load file '{}' because it is not in valid JSON format."
-            "More info: {}"
-        )
-        return message.format(self.filepath, self.error)
+        message = "Failed to load file '{}' because ".format(self.filepath)
+        return message + self.reason
 
 
 def load_events(filepath: Text) -> DataFrame:
     """Loads event data from a JSON file."""
 
-    try:
-        events = _read_json(filepath)
-    except json.JSONDecodeError as e:
-        raise UnknownFormatError(filepath, e)
+    events = _read_json(filepath)
 
     events_df = _build_dataframe(events)
     logging.info("Loaded {} events from '{}'".format(len(events_df), filepath))
@@ -38,16 +43,41 @@ def load_events(filepath: Text) -> DataFrame:
     return events_df
 
 
+def _validate(i: int, line: Text, filepath: Text):
+    """Asserts that each line from the input file is in the correct format."""
+
+    # assert event is JSON-readable
+    event = json.loads(line)
+
+    # assert event is not missing mandatory keys
+    for key in EXPECTED_KEYS:
+        if key not in event.keys():
+            raise UnknownFormatError(
+                filepath,
+                reason="line {} is missing expected events key '{}'".format(i, key),
+            )
+
+    # assert event timestamp is in correct format
+    try:
+        event["timestamp"] = datetime.strptime(event["timestamp"], INPUT_TIMESTAMP_STR)
+    except ValueError:
+        raise UnknownFormatError(
+            filepath,
+            reason="line {} contains a timestamp which is not in the format {}".format(
+                i, INPUT_TIMESTAMP_STR
+            ),
+        )
+
+    return event
+
+
 def _read_json(filepath: Text) -> List[Dict[Text, Any]]:
     """Reads lines from JSON and converts timestamps to datetimes."""
     events = []
 
     with open(filepath, "r") as f:
-        for line in f.readlines():
-            event = json.loads(line)
-            event["timestamp"] = datetime.strptime(
-                event["timestamp"], INPUT_TIMESTAMP_STR
-            )
+        for i, line in enumerate(f.readlines()):
+            event = _validate(i, line, filepath)
             events.append(event)
 
     return events
