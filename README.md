@@ -27,6 +27,8 @@ pip install -r requirements.txt
 python main.py --input_file <events.json> --window_size <window_size>
 ```
 
+**The script will output the moving averages to a file in the directory named** `output.json`
+
 ## Tests
 
 To run the test suite, install requirements as above and run:
