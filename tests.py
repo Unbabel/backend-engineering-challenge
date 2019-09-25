@@ -6,8 +6,8 @@ from datetime import datetime
 
 
 def test_load_events():
-    timestamps = load_events("events.json")
-    assert len(timestamps) == 3
+    events = load_events("events.json")
+    assert len(events) == 3
 
 
 def test_unknown_format(tmpdir):
@@ -41,7 +41,7 @@ def test_moving_averages():
 
 
 def test_round_to_minute():
-    tests = [
+    test_times = [
         datetime(year=2019, month=2, day=1, minute=3),
         datetime(year=2019, month=2, day=1, minute=3, second=4),
     ]
@@ -56,7 +56,7 @@ def test_round_to_minute():
         datetime(year=2019, month=2, day=1, minute=3),
     ]
 
-    for i, time in enumerate(tests):
+    for i, time in enumerate(test_times):
         assert _round_to_minute(time, upwards=True) == expected_up[i]
         assert _round_to_minute(time, upwards=False) == expected_down[i]
 

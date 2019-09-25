@@ -32,7 +32,7 @@ def load_events(filepath: Text) -> DataFrame:
         raise UnknownFormatError(filepath, e)
 
     events_df = _build_dataframe(events)
-    logging.info("Loaded {} events from '{}".format(len(events_df), filepath))
+    logging.info("Loaded {} events from '{}'".format(len(events_df), filepath))
 
     return events_df
 
@@ -69,7 +69,7 @@ def export_averages(averages: List[Dict[Text, Any]], filepath: Text):
     with open(filepath, "w+") as f:
         f.write(filestr)
 
-    logging.info("Dumped {} averages to '{}".format(len(averages), filepath))
+    logging.info("Dumped {} averages to '{}'".format(len(averages), filepath))
 
 
 def _format_file_string(averages: List[Dict[Text, Any]]) -> Text:

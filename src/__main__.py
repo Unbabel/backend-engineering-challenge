@@ -1,6 +1,9 @@
 import argparse
 from src.io import load_events, export_averages
 from src.processing import moving_averages
+import logging
+
+logging.getLogger().setLevel(logging.INFO)
 
 
 def create_arg_parser() -> argparse.ArgumentParser:
@@ -28,6 +31,7 @@ def create_arg_parser() -> argparse.ArgumentParser:
 def main():
     parser = create_arg_parser()
     args = parser.parse_args()
+
     events = load_events(args.input_file)
     averages = moving_averages(events, args.window_size)
     export_averages(averages, "output.json")

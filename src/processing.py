@@ -2,6 +2,9 @@ from typing import List, Dict, Text, Any
 from pandas import DataFrame
 from datetime import datetime, timedelta
 import numpy as np
+import warnings
+
+warnings.simplefilter(action='ignore', category=UserWarning)
 
 
 def moving_averages(events: DataFrame, window_size: int) -> List[Dict[Text, Any]]:
