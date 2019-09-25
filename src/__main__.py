@@ -10,7 +10,7 @@ def create_arg_parser() -> argparse.ArgumentParser:
     """Parse the command line arguments for the unbabel_cli script."""
 
     parser = argparse.ArgumentParser(
-        prog="Unbabel CLI", formatter_class=argparse.ArgumentDefaultsHelpFormatter
+        prog="unbabel_cli", formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
 
     parser.add_argument(

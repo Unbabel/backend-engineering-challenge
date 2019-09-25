@@ -3,6 +3,7 @@ from typing import Text, List, Dict, Any
 from pandas import DataFrame
 from datetime import datetime
 import logging
+import os
 
 INPUT_TIMESTAMP_STR = "%Y-%m-%d %H:%M:%S.%f"
 OUTPUT_TIMESTAMP_STR = "%Y-%m-%d %H:%M:%S"
@@ -69,6 +70,7 @@ def export_averages(averages: List[Dict[Text, Any]], filepath: Text):
     with open(filepath, "w+") as f:
         f.write(filestr)
 
+    filepath = os.path.abspath(filepath)
     logging.info("Dumped {} averages to '{}'".format(len(averages), filepath))
 
 

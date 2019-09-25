@@ -6,7 +6,7 @@ from datetime import datetime
 
 
 def test_load_events():
-    events = load_events("events.json")
+    events = load_events("example_events.json")
     assert len(events) == 3
 
 
@@ -63,7 +63,7 @@ def test_round_to_minute():
 
 def test_integration(tmpdir):
     filepath = tmpdir.strpath + "/output.json"
-    timestamps = load_events("events.json")
+    timestamps = load_events("example_events.json")
 
     averages = moving_averages(timestamps, 10)
     export_averages(averages, filepath)
