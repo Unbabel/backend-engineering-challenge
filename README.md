@@ -7,7 +7,7 @@ If you found this repository it probably means that you are participating in our
 
 Please fork this repo before you start working on the challenge, read it careful and take your time and think about the solution. Also, please fork this repository because we will evaluate the code on the fork.
 
-This is an opportunity for us both to work together and get to know each other in a more technical way. If you have some doubts please open and issue an we'll reach out to help.
+This is an opportunity for us both to work together and get to know each other in a more technical way. If you have some doubts please open an issue and we'll reach out to help.
 
 Good luck!
 
