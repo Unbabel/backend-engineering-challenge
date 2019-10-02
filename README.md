@@ -1,4 +1,4 @@
-# Bakckend Engineering Challenge
+# Backend Engineering Challenge
 
 
 Welcome to our Engineering Challenge repository 🖖
@@ -7,7 +7,7 @@ If you found this repository it probably means that you are participating in our
 
 Please fork this repo before you start working on the challenge, read it careful and take your time and think about the solution. Also, please fork this repository because we will evaluate the code on the fork.
 
-This is an opportunity for us both to work together and get to know each other in a more technical way. If have some doubt please open and issue and we'll reach out to help.
+This is an opportunity for us both to work together and get to know each other in a more technical way. If you have some doubts please open and issue an we'll reach out to help.
 
 Good luck!
 
@@ -76,7 +76,7 @@ Before jumping right into implementation we advise you to think about the soluti
 + Include a README.md that briefly describes how to build and run your code
 + Be consistent in your code. 
 
-Feel free to, in your solution, include some your considerations while doing this challenge. We want you to solve this challenge in the language you feel most confortable with. Our machines run Python, Ruby, Scala, Java, Clojure, Elixir and Nodejs. If you are thinking of using any other programming language please reach out to us first 🙏.
+Feel free to, in your solution, include some of your considerations while doing this challenge. We want you to solve this challenge in the language you feel most confortable with. Our machines run Python, Ruby, Scala, Java, Clojure, Elixir and Nodejs. If you are thinking of using any other programming language please reach out to us first 🙏.
 
 Also if you have any problem please **open an issue**. 
 
@@ -84,5 +84,5 @@ Good luck and may the force be with you
 
 #### Extra points
 
-If you feeling creative feel free to consider any additional cases you might find interesting. Remember this is a bonus, focus on delivering the solution first.
+If you are feeling creative feel free to consider any additional cases you might find interesting. Remember this is a bonus, focus on delivering the solution first.
 
