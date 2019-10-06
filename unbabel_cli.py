@@ -57,6 +57,5 @@ def write_output_file(result:dict):
 if __name__ == '__main__':
 	args = get_command_args()
 	data = read_input_file(args.input_file)
-	print(args)
 	result = cacl_avg_delivery_time(data, args.window_size)
 	write_output_file(result)
