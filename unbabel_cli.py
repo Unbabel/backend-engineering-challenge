@@ -15,7 +15,7 @@ with open(input_file) as f:
 f.close()
 
 
-### calc data for every min
+### calc avg for every min according to window size
 
 #### transform in dataframe
 df = json_normalize(data)
@@ -26,7 +26,7 @@ ref = df["timestamp"].min().floor(freq = 'T')
 end = df["timestamp"].max().ceil(freq = 'T')
 #### generate data
 result = []
-while ref < end:
+while ref <= end:
 	past = ref - timedelta(minutes = window_size)
 	df_window = df[(df["timestamp"] <= ref) & (df["timestamp"] >= past)]
 	avg = df_window["duration"].mean() if len(df_window) > 0 else 0
