@@ -53,3 +53,6 @@ while ref <= end:
 print(result)
 
 ### write output data
+with open('outputfile.json', 'w') as f:
+	for r in result:
+		f.write("%s\n" % json.dumps(r))
