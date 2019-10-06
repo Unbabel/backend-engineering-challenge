@@ -48,10 +48,15 @@ def cacl_avg_delivery_time(data: pd.DataFrame, window_size: int) -> list:
 		#### generate data
 		result = []
 		while ref <= end:
-			past = ref - timedelta(minutes = window_size)
-			df_window = df[(df["timestamp"] <= ref) & (df["timestamp"] >= past)]
-			avg = df_window["duration"].mean() if len(df_window) > 0 else 0
+			#find start timestamp according to window and ref timestamp
+			start = ref - timedelta(minutes = window_size) 
+			#filter data based on start and ref timestamp
+			df_window = df[(df["timestamp"] <= ref) & (df["timestamp"] >= start)] 
+			#if data exits calc the mean
+			avg = df_window["duration"].mean() if len(df_window) > 0 else 0 #
+			#append result
 			result.append({"date":str(ref), "average_delivery_time":avg})
+			#go to next ref data (ref <- ref + 1 min)
 			ref += timedelta(minutes = 1)
 		return result
 	except:
