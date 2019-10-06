@@ -3,10 +3,26 @@ import numpy as np
 import pandas as pd
 from pandas.io.json import json_normalize
 from datetime import datetime, timedelta
+import argparse
+
+## check if window_size is a valid integer
+def check_int(value):
+	ivalue = int(value)
+	if ivalue <= 0:
+		raise argparse.ArgumentTypeError("%s should be a integer a grater than 0" % value)
+	return ivalue
+
 
 ### get command line args
-input_file = 'events.json'
-window_size = 10
+parser = argparse.ArgumentParser(description='Aggregate events by minutes')
+parser.add_argument('--input_file',  required=True, type=str, help='Json file name with events')
+parser.add_argument('--window_size',  required=True, type=check_int, help='Moving avg window size (in min)')
+args = parser.parse_args()
+print(args.window_size)
+
+
+input_file = args.input_file
+window_size = args.window_size
 ### read input data
 data = []
 with open(input_file) as f:
@@ -34,6 +50,6 @@ while ref <= end:
 	ref += timedelta(minutes = 1)
 
 
-
+print(result)
 
 ### write output data
