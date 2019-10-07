@@ -1,5 +1,4 @@
 import json
-import numpy as np
 import pandas as pd
 from pandas.io.json import json_normalize
 from datetime import datetime, timedelta
@@ -10,14 +9,14 @@ import sys
 def check_int(value):
 	ivalue = int(value)
 	if ivalue <= 0:
-		raise argparse.ArgumentTypeError("%s should be a integer a grater than 0" % value)
+		raise argparse.ArgumentTypeError("%s should be an integer greater than 0" % value)
 	return ivalue
 
 ### get command line args
 def get_command_args():
 	parser = argparse.ArgumentParser(description='Aggregate events by minutes')
-	parser.add_argument('--input_file',  required=True, type=str, help='Json file name with events')
-	parser.add_argument('--window_size',  required=True, type=check_int, help='Moving avg window size (in min)')
+	parser.add_argument('--input_file',  required=True, type=str, help='Json file path with events')
+	parser.add_argument('--window_size',  required=True, type=check_int, help='Moving average window size (in min)')
 	args = parser.parse_args()
 	return args
 
@@ -30,7 +29,7 @@ def read_input_file(input_file: str) -> list:
 				data.append(json.loads(line))
 			f.close()
 	except:
-		print("Error when reading file! Check if file exits and format is ok!") 
+		print("Error when reading the file! Check if the file exists and format is ok!") 
 		sys.exit(1)
 
 	return data
@@ -60,7 +59,7 @@ def cacl_avg_delivery_time(data: pd.DataFrame, window_size: int) -> list:
 			ref += timedelta(minutes = 1)
 		return result
 	except:
-		print("Oops! Apparently data in input_file are not as expected!")
+		print("Oops! Apparently, data in the input file are not as expected!")
 		sys.exit(2)    
 
 ### write output data
@@ -70,7 +69,7 @@ def write_output_file(result:dict):
 			for r in result:
 				f.write("%s\n" % json.dumps(r))
 	except:
-		print("Error when writing to file") 
+		print("Error when writing to file!") 
 		sys.exit(3) 
 
 if __name__ == '__main__':
@@ -78,3 +77,4 @@ if __name__ == '__main__':
 	data = read_input_file(args.input_file)
 	result = cacl_avg_delivery_time(data, args.window_size)
 	write_output_file(result)
+	print("Average delivery time calculated with success!")
