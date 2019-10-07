@@ -7,10 +7,7 @@ import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Date;
 
-/**
- * Service to handle the average calculation.
- */
-public interface AverageCalculatorService {
+public class AverageCalculatorServiceImpl implements AverageCalculatorService {
 
     /**
      * Calculates a moving average translation delivery time based on window size.
@@ -20,8 +17,8 @@ public interface AverageCalculatorService {
      * @param windowSizeMinutes window size in minutes to calculate the average delivery time.
      * @return A list of an average delivery time based on the {@code windowSizeMinutes}.
      */
-    Collection<AverageDeliveryTime> averageTranslationTimeOf(@Nonnull final Collection<TranslationDelivered> deliveredList,
-                                                             @Nonnull final Date currentDatetime,
-                                                             final int windowSizeMinutes);
+    @Override
+    public Collection<AverageDeliveryTime> averageTranslationTimeOf(@Nonnull Collection<TranslationDelivered> deliveredList, @Nonnull Date currentDatetime, int windowSizeMinutes) {
+        return null;
+    }
 }
-

@@ -60,6 +60,12 @@ public class TranslationDelivered implements Serializable {
         duration = delivered.duration;
     }
 
+    public TranslationDelivered(Date timestamp, String translationId, double duration) {
+        this.timestamp = timestamp;
+        this.translationId = translationId;
+        this.duration = duration;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
