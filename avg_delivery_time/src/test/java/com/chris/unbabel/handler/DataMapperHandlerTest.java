@@ -2,8 +2,8 @@ package com.chris.unbabel.handler;
 
 import com.chris.unbabel.core.AverageDeliveryTime;
 import com.chris.unbabel.core.TranslationDelivered;
+import com.chris.unbabel.exception.TranslationEventException;
 import com.chris.unbabel.util.DateUtils;
-import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,6 +12,7 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.ParseException;
+import java.util.Collection;
 import java.util.stream.Collectors;
 
 import static com.chris.unbabel.core.Event.TRANSLATION_DELIVERED;
@@ -34,8 +35,8 @@ public class DataMapperHandlerTest {
     }
 
     @Test
-    public void testMapEvents() {
-        final ImmutableCollection<TranslationDelivered> mappedEvents = handler.mapEvents(file, TRANSLATION_DELIVERED);
+    public void testMapEvents() throws TranslationEventException {
+        final Collection<TranslationDelivered> mappedEvents = handler.mapEvents(file, TRANSLATION_DELIVERED);
 
         assertThat(
                 mappedEvents.stream()
@@ -44,20 +45,25 @@ public class DataMapperHandlerTest {
                 contains("5aa5b2f39f7254a75aa5", "5aa5b2f39f7254a75aa4", "5aa5b2f39f7254a75bb33"));
     }
 
+    @Test(expected = TranslationEventException.class)
+    public void testMapEventsWrongFile() throws TranslationEventException {
+        handler.mapEvents(new File("bad_name"), TRANSLATION_DELIVERED);
+    }
+
     @Test
-    public void testMap() throws ParseException {
+    public void testMap() throws ParseException, TranslationEventException {
         AverageDeliveryTime deliveryTime1 = new AverageDeliveryTime();
         deliveryTime1.setDate(DateUtils.parse("2018-12-26 18:23:00"));
         deliveryTime1.setAvgTime(20.6D);
 
         AverageDeliveryTime deliveryTime2 = new AverageDeliveryTime();
-        deliveryTime1.setDate(DateUtils.parse("2018-12-26 18:24:00"));
-        deliveryTime1.setAvgTime(22.0D);
+        deliveryTime2.setDate(DateUtils.parse("2018-12-26 18:24:00"));
+        deliveryTime2.setAvgTime(22.0D);
 
         String map = handler.map(ImmutableList.of(deliveryTime1, deliveryTime2));
 
         assertThat(map,
-                is("{\"date\":\"2018-12-26 18:23:00\",\"average_delivery_time\":20.6}" +
-                        "{\"date\":\"2018-12-26 18:24:00\",\"average_delivery_time\":22.0}"));
+                is("[{\"date\":\"2018-12-26 18:23:00\",\"average_delivery_time\":20.6}," +
+                        "{\"date\":\"2018-12-26 18:24:00\",\"average_delivery_time\":22.0}]"));
     }
 }

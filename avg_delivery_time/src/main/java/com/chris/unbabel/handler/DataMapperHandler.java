@@ -3,15 +3,16 @@ package com.chris.unbabel.handler;
 import com.chris.unbabel.core.AverageDeliveryTime;
 import com.chris.unbabel.core.Event;
 import com.chris.unbabel.core.TranslationDelivered;
-import com.google.common.collect.ImmutableCollection;
+import com.chris.unbabel.exception.TranslationEventException;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.util.Collection;
 
 public interface DataMapperHandler {
 
-    ImmutableCollection<TranslationDelivered> mapEvents(@Nonnull final File file,
-                                                        @Nonnull final Event event);
+    Collection<TranslationDelivered> mapEvents(@Nonnull final File file,
+                                               @Nonnull final Event event) throws TranslationEventException;
 
-    String map(ImmutableCollection<AverageDeliveryTime> deliveryTimeList);
+    String map(Collection<AverageDeliveryTime> deliveryTimeList) throws TranslationEventException;
 }
