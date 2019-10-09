@@ -1,3 +1,5 @@
+
+
 plugins {
     id 'java'
     id 'application'
@@ -26,3 +28,7 @@ dependencies {
 application {
     mainClassName = 'com.chris.unbabel.App'
 }
+
+group = 'com.chris.unbabel'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'

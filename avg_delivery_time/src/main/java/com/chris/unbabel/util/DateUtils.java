@@ -3,6 +3,8 @@ package com.chris.unbabel.util;
 import javax.annotation.Nonnull;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -28,5 +30,15 @@ public final class DateUtils {
     public static Date parse(@Nonnull final String date) throws ParseException {
         checkNotNull(date);
         return FORMATTER.parse(date);
+    }
+
+    /**
+     *
+     * @param date
+     * @return
+     */
+    public static LocalDateTime toDateTime(Date date) {
+        return LocalDateTime.ofInstant(date.toInstant(),
+                ZoneId.systemDefault());
     }
 }

@@ -36,6 +36,11 @@ public class AverageDeliveryTime implements Serializable {
         this.avgTime = avg.getAvgTime();
     }
 
+    public AverageDeliveryTime(Date date, double avgTime) {
+        this.date = date;
+        this.avgTime = avgTime;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
