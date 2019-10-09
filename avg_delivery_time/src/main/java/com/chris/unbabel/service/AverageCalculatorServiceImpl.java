@@ -26,7 +26,7 @@ public class AverageCalculatorServiceImpl implements AverageCalculatorService {
     private static final int DOUBLE_SCALE = 2;
 
     /**
-     * @see AverageCalculatorService#calculateAverageTime(List, Date, long) 
+     * @see AverageCalculatorService#calculateAverageTime(List, Date, long)
      */
     @Override
     public Collection<AverageDeliveryTime> calculateAverageTime(@Nonnull final List<TranslationDelivered> deliveredList,
@@ -69,7 +69,7 @@ public class AverageCalculatorServiceImpl implements AverageCalculatorService {
             TranslationDelivered delivered = deliveredList.get(deliveryListPosition);
             LocalDateTime dateTime = DateUtils.toDateTime(delivered.getTimestamp());
 
-            int point = dateTime.compareTo(current.minusMinutes(1).withSecond(LAST_SECOND));
+            int point = dateTime.compareTo(current.minusMinutes(1).withSecond(0));
 
             if (point <= 0) {
                 deliveryListPosition++;
