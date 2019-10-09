@@ -27,17 +27,21 @@ public class AverageCalculatorServiceTest {
 
     @Test
     public void testAverageTranslationSimple() throws ParseException, JsonProcessingException {
+        TranslationDelivered delivered0 = new TranslationDelivered(
+                DateUtils.parse("2018-12-26 18:10:08.509654"),
+                "5aa5b2f39f7254a75aa5",
+                100
+        );
+
         TranslationDelivered delivered1 = new TranslationDelivered(
                 DateUtils.parse("2018-12-26 18:11:08.509654"),
                 "5aa5b2f39f7254a75aa5",
                 20
-
         );
         TranslationDelivered delivered2 = new TranslationDelivered(
                 DateUtils.parse("2018-12-26 18:15:19.903159"),
                 "5aa5b2f39f7254a75aa4",
                 31
-
         );
         TranslationDelivered delivered3 = new TranslationDelivered(
                 DateUtils.parse("2018-12-26 18:23:19.903159"),
@@ -45,8 +49,8 @@ public class AverageCalculatorServiceTest {
                 54
         );
 
-        Collection<AverageDeliveryTime> averageDeliveryTimes = calculatorService.averageTranslationTimeOf(
-                Lists.newArrayList(delivered1, delivered2, delivered3),
+        Collection<AverageDeliveryTime> averageDeliveryTimes = calculatorService.calculateAverageTime(
+                Lists.newArrayList(delivered0, delivered1, delivered2, delivered3),
                 DateUtils.parse("2018-12-26 18:24:00"),
                 14);
 
@@ -75,7 +79,7 @@ public class AverageCalculatorServiceTest {
                 20
         );
 
-        Collection<AverageDeliveryTime> averageDeliveryTimes = calculatorService.averageTranslationTimeOf(
+        Collection<AverageDeliveryTime> averageDeliveryTimes = calculatorService.calculateAverageTime(
                 Lists.newArrayList(delivered1),
                 DateUtils.parse("2018-12-26 18:24:00"),
                 1);
@@ -86,29 +90,31 @@ public class AverageCalculatorServiceTest {
 
     @Test
     public void testAverageTranslationMoreThanOneAVGByTimeSlot() throws ParseException, JsonProcessingException {
+        TranslationDelivered delivered0 = new TranslationDelivered(
+                DateUtils.parse("2018-12-26 18:10:08.509654"),
+                "5aa5b2f39f7254a75aa5",
+                50
+        );
+
         TranslationDelivered delivered1 = new TranslationDelivered(
                 DateUtils.parse("2018-12-26 18:11:08.509654"),
                 "5aa5b2f39f7254a75aa5",
                 20
-
         );
         TranslationDelivered delivered2 = new TranslationDelivered(
                 DateUtils.parse("2018-12-26 18:11:10.509654"),
                 "5aa5b2f39f7254a75aa5",
                 25
-
         );
         TranslationDelivered delivered3 = new TranslationDelivered(
                 DateUtils.parse("2018-12-26 18:15:19.903159"),
                 "5aa5b2f39f7254a75aa4",
                 31
-
         );
         TranslationDelivered delivered4 = new TranslationDelivered(
                 DateUtils.parse("2018-12-26 18:23:05.509654"),
                 "5aa5b2f39f7254a75aa5",
                 40
-
         );
         TranslationDelivered delivered5 = new TranslationDelivered(
                 DateUtils.parse("2018-12-26 18:23:19.903159"),
@@ -116,8 +122,8 @@ public class AverageCalculatorServiceTest {
                 54
         );
 
-        Collection<AverageDeliveryTime> averageDeliveryTimes = calculatorService.averageTranslationTimeOf(
-                Lists.newArrayList(delivered1, delivered2, delivered3, delivered4, delivered5),
+        Collection<AverageDeliveryTime> averageDeliveryTimes = calculatorService.calculateAverageTime(
+                Lists.newArrayList(delivered0, delivered1, delivered2, delivered3, delivered4, delivered5),
                 DateUtils.parse("2018-12-26 18:24:00"),
                 14);
 

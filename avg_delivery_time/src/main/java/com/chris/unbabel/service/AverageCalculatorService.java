@@ -21,8 +21,8 @@ public interface AverageCalculatorService {
      * @param windowSizeMinutes window size in minutes to calculate the average delivery time.
      * @return A list of an average delivery time based on the {@code windowSizeMinutes}.
      */
-    Collection<AverageDeliveryTime> averageTranslationTimeOf(@Nonnull final List<TranslationDelivered> deliveredList,
-                                                             @Nonnull final Date currentDatetime,
-                                                             final int windowSizeMinutes);
+    Collection<AverageDeliveryTime> calculateAverageTime(@Nonnull final List<TranslationDelivered> deliveredList,
+                                                         @Nonnull final Date currentDatetime,
+                                                         final long windowSizeMinutes);
 }
 
