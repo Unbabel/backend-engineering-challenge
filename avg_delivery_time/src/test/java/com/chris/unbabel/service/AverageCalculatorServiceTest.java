@@ -77,6 +77,51 @@ public class AverageCalculatorServiceTest {
     }
 
     @Test
+    public void testAverageTranslationSimpleDefaultDate() throws ParseException, JsonProcessingException {
+        TranslationDelivered delivered0 = new TranslationDelivered(
+                DateUtils.parse("2018-12-26 18:09:08.509654"),
+                "5aa5b2f39f7254a75aa5",
+                100
+        );
+
+        TranslationDelivered delivered1 = new TranslationDelivered(
+                DateUtils.parse("2018-12-26 18:11:08.509654"),
+                "5aa5b2f39f7254a75aa5",
+                20
+        );
+        TranslationDelivered delivered2 = new TranslationDelivered(
+                DateUtils.parse("2018-12-26 18:15:19.903159"),
+                "5aa5b2f39f7254a75aa4",
+                31
+        );
+        TranslationDelivered delivered3 = new TranslationDelivered(
+                DateUtils.parse("2018-12-26 18:23:19.903159"),
+                "5aa5b2f39f7254a75bb33",
+                54
+        );
+
+        Collection<AverageDeliveryTime> averageDeliveryTimes = calculatorService.calculateAverageTime(
+                Lists.newArrayList(delivered0, delivered1, delivered2, delivered3),
+                14);
+
+        assertThat(MAPPER.writeValueAsString(averageDeliveryTimes),
+                Matchers.is("[{\"date\":\"2018-12-26 18:11:00\",\"average_delivery_time\":0.0}," +
+                        "{\"date\":\"2018-12-26 18:12:00\",\"average_delivery_time\":20.0}," +
+                        "{\"date\":\"2018-12-26 18:13:00\",\"average_delivery_time\":20.0}," +
+                        "{\"date\":\"2018-12-26 18:14:00\",\"average_delivery_time\":20.0}," +
+                        "{\"date\":\"2018-12-26 18:15:00\",\"average_delivery_time\":20.0}," +
+                        "{\"date\":\"2018-12-26 18:16:00\",\"average_delivery_time\":25.5}," +
+                        "{\"date\":\"2018-12-26 18:17:00\",\"average_delivery_time\":25.5}," +
+                        "{\"date\":\"2018-12-26 18:18:00\",\"average_delivery_time\":25.5}," +
+                        "{\"date\":\"2018-12-26 18:19:00\",\"average_delivery_time\":25.5}," +
+                        "{\"date\":\"2018-12-26 18:20:00\",\"average_delivery_time\":25.5}," +
+                        "{\"date\":\"2018-12-26 18:21:00\",\"average_delivery_time\":25.5}," +
+                        "{\"date\":\"2018-12-26 18:22:00\",\"average_delivery_time\":25.5}," +
+                        "{\"date\":\"2018-12-26 18:23:00\",\"average_delivery_time\":25.5}," +
+                        "{\"date\":\"2018-12-26 18:24:00\",\"average_delivery_time\":39.75}]"));
+    }
+
+    @Test
     public void testAverageTranslationWindowSizeEqualsOne() throws ParseException, JsonProcessingException {
         TranslationDelivered delivered1 = new TranslationDelivered(
                 DateUtils.parse("2018-12-26 18:11:08.509654"),

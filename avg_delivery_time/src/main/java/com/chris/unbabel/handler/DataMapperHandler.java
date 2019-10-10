@@ -8,11 +8,12 @@ import com.chris.unbabel.exception.TranslationEventException;
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.Collection;
+import java.util.List;
 
 public interface DataMapperHandler {
 
-    Collection<TranslationDelivered> mapEvents(@Nonnull final File file,
-                                               @Nonnull final Event event) throws TranslationEventException;
+    List<TranslationDelivered> mapEvents(@Nonnull final File file,
+                                         @Nonnull final Event event) throws TranslationEventException;
 
     String map(Collection<AverageDeliveryTime> deliveryTimeList) throws TranslationEventException;
 }

@@ -3,6 +3,7 @@ package com.chris.unbabel.service;
 import com.chris.unbabel.core.AverageDeliveryTime;
 import com.chris.unbabel.core.TranslationDelivered;
 import com.chris.unbabel.util.DateUtils;
+import com.google.common.collect.Iterables;
 
 import javax.annotation.Nonnull;
 import java.math.BigDecimal;
@@ -10,10 +11,7 @@ import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static com.chris.unbabel.core.AverageDeliveryTime.build;
 
@@ -24,6 +22,29 @@ public class AverageCalculatorServiceImpl implements AverageCalculatorService {
 
     private static final int LAST_SECOND = 59;
     private static final int DOUBLE_SCALE = 2;
+    private static final int RESET_SECONDS = 0;
+
+    /**
+     * @see AverageCalculatorService#calculateAverageTime(List, long)
+     */
+    @Override
+    public Collection<AverageDeliveryTime> calculateAverageTime(@Nonnull final List<TranslationDelivered> deliveredList,
+                                                                final long windowSizeMinutes) {
+        Collection<AverageDeliveryTime> averageDeliveryTimeList = Collections.emptyList();
+
+        if (!deliveredList.isEmpty()) {
+            averageDeliveryTimeList = calculateAverageTime(deliveredList, getLastPosition(deliveredList), windowSizeMinutes);
+        }
+
+        return averageDeliveryTimeList;
+    }
+
+    private Date getLastPosition(@Nonnull final List<TranslationDelivered> list) {
+        LocalDateTime dateTime = DateUtils.toDateTime(Iterables.getLast(list).getTimestamp()).plusMinutes(1);
+        final ZonedDateTime dateTimeAsLocal = dateTime.atZone(ZoneId.systemDefault());
+
+        return Date.from(dateTimeAsLocal.toInstant());
+    }
 
     /**
      * @see AverageCalculatorService#calculateAverageTime(List, Date, long)
@@ -32,33 +53,30 @@ public class AverageCalculatorServiceImpl implements AverageCalculatorService {
     public Collection<AverageDeliveryTime> calculateAverageTime(@Nonnull final List<TranslationDelivered> deliveredList,
                                                                 @Nonnull final Date baseDatetime,
                                                                 final long windowSizeMinutes) {
-
         final List<AverageDeliveryTime> averageDeliveryTimes = new ArrayList<>();
         final long firstPosition = windowSizeMinutes - 1L;
 
-        LocalDateTime currentTime = DateUtils.toDateTime(baseDatetime)
+        LocalDateTime currentWindowTime = DateUtils.toDateTime(baseDatetime)
                 .minusMinutes(firstPosition)
-                .withSecond(0);
+                .withSecond(RESET_SECONDS);
 
         int windowPosition = 1;
-        int deliveryListPosition = calculateDeliveryListFirstPosition(deliveredList, currentTime);
+        int deliveryListPosition = calculateDeliveryListFirstPosition(deliveredList, currentWindowTime);
         double lastAvg = 0.0D;
 
         do {
             final Collection<Double> averageValues = new ArrayList<>();
 
-            deliveryListPosition = addAverageValues(deliveredList, currentTime, deliveryListPosition, lastAvg, averageValues);
+            deliveryListPosition = addAverageValues(deliveredList, currentWindowTime, deliveryListPosition, lastAvg, averageValues);
 
-            final double avg = calculateAverageForCurrentWindowTime(averageDeliveryTimes, currentTime, averageValues);
+            lastAvg = calculateAverageForCurrentWindowTime(averageDeliveryTimes, currentWindowTime, averageValues);
 
             averageValues.clear();
-            lastAvg = avg;
-
             ++windowPosition;
 
-            currentTime = currentTime.plusMinutes(1);
+            currentWindowTime = currentWindowTime.plusMinutes(1);
         } while (windowPosition <= windowSizeMinutes);
-        
+
         return averageDeliveryTimes;
     }
 
@@ -69,7 +87,7 @@ public class AverageCalculatorServiceImpl implements AverageCalculatorService {
             TranslationDelivered delivered = deliveredList.get(deliveryListPosition);
             LocalDateTime dateTime = DateUtils.toDateTime(delivered.getTimestamp());
 
-            int point = dateTime.compareTo(current.minusMinutes(1).withSecond(0));
+            int point = dateTime.compareTo(current.minusMinutes(1).withSecond(RESET_SECONDS));
 
             if (point <= 0) {
                 deliveryListPosition++;
@@ -90,7 +108,7 @@ public class AverageCalculatorServiceImpl implements AverageCalculatorService {
             final TranslationDelivered delivered = deliveredList.get(deliveryListPosition);
             final LocalDateTime dateTime = DateUtils.toDateTime(delivered.getTimestamp());
 
-            int startPoint = dateTime.compareTo(current.minusMinutes(1).withSecond(0));
+            int startPoint = dateTime.compareTo(current.minusMinutes(1).withSecond(RESET_SECONDS));
             int endPoint = dateTime.compareTo(current.minusMinutes(1).withSecond(LAST_SECOND));
 
             if (startPoint >= 0 && endPoint <= 0) {

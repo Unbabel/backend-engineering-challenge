@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -24,7 +25,7 @@ public class DataMapperHandlerImpl implements DataMapperHandler {
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     @Override
-    public Collection<TranslationDelivered> mapEvents(@Nonnull File file, @Nonnull Event event) throws TranslationEventException {
+    public List<TranslationDelivered> mapEvents(@Nonnull File file, @Nonnull Event event) throws TranslationEventException {
         try (final Stream<String> stream = Files.lines(Paths.get(file.toURI()))) {
             return stream.map(json -> readValue(json, event))
                     .filter(Optional::isPresent)

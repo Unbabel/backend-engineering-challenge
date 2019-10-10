@@ -13,6 +13,9 @@ import java.util.List;
  */
 public interface AverageCalculatorService {
 
+    Collection<AverageDeliveryTime> calculateAverageTime(@Nonnull List<TranslationDelivered> deliveredList,
+                                                         long windowSizeMinutes);
+
     /**
      * Calculates a moving average translation delivery time based on window size.
      *
