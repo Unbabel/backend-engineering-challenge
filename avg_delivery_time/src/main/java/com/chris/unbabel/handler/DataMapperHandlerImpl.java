@@ -1,8 +1,7 @@
 package com.chris.unbabel.handler;
 
-import com.chris.unbabel.core.AverageDeliveryTime;
-import com.chris.unbabel.core.Event;
-import com.chris.unbabel.core.TranslationDelivered;
+import com.chris.unbabel.data.AverageDeliveryTime;
+import com.chris.unbabel.data.TranslationDelivered;
 import com.chris.unbabel.exception.TranslationEventException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,9 +24,9 @@ public class DataMapperHandlerImpl implements DataMapperHandler {
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     @Override
-    public List<TranslationDelivered> mapEvents(@Nonnull File file, @Nonnull Event event) throws TranslationEventException {
+    public List<TranslationDelivered> mapEvents(@Nonnull File file) throws TranslationEventException {
         try (final Stream<String> stream = Files.lines(Paths.get(file.toURI()))) {
-            return stream.map(json -> readValue(json, event))
+            return stream.map(DataMapperHandlerImpl::readValue)
                     .filter(Optional::isPresent)
                     .map(Optional::get)
                     .collect(Collectors.toList());
@@ -36,10 +35,9 @@ public class DataMapperHandlerImpl implements DataMapperHandler {
         }
     }
 
-    private static Optional<TranslationDelivered> readValue(@Nonnull String json, @Nonnull Event event) {
+    private static Optional<TranslationDelivered> readValue(@Nonnull String json) {
         try {
-            return Optional.ofNullable(MAPPER.readValue(json, TranslationDelivered.class))
-                    .filter(delivered -> event.getName().equalsIgnoreCase(delivered.getEventName()));
+            return Optional.ofNullable(MAPPER.readValue(json, TranslationDelivered.class));
         } catch (IOException e) {
             LOGGER.warn("Failed to parse json, cause={}", e.getMessage());
             LOGGER.debug(json, e);

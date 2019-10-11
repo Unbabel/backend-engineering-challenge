@@ -1,4 +1,4 @@
-package com.chris.unbabel.core;
+package com.chris.unbabel.data;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,8 +11,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-import static com.chris.unbabel.util.DateUtils.DATE_FORMAT;
-
 /**
  * Translation Delivered data from an event stream.
  */
@@ -22,7 +20,7 @@ public class TranslationDelivered implements Serializable {
     private static final long serialVersionUID = -7312693523679168709L;
 
     @JsonProperty("timestamp")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     public Date timestamp;
 
     @JsonProperty("translation_id")

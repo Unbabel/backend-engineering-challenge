@@ -1,9 +1,13 @@
-package com.chris.unbabel.service;
+package com.chris.unbabel.avgserver.function;
 
-import com.chris.unbabel.core.AverageDeliveryTime;
-import com.chris.unbabel.core.TranslationDelivered;
-import com.chris.unbabel.util.DateUtils;
+import com.chris.unbabel.avgserver.core.AverageDeliveryTime;
+import com.chris.unbabel.avgserver.core.TranslationDelivered;
+import com.chris.unbabel.avgserver.core.TranslationDeliveredPayload;
+import com.chris.unbabel.avgserver.util.DateUtils;
+import com.chris.unbabel.avgserver.validator.AverageValidator;
 import com.google.common.collect.Iterables;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
 import java.math.BigDecimal;
@@ -12,31 +16,54 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
-import static com.chris.unbabel.core.AverageDeliveryTime.build;
+import static com.chris.unbabel.avgserver.core.AverageDeliveryTime.build;
+import static com.chris.unbabel.avgserver.core.Event.TRANSLATION_DELIVERED;
 
 /**
- * @see AverageCalculatorService
+ * Lambda Function to calculate a average time for translation delivered events.
  */
-public class AverageCalculatorServiceImpl implements AverageCalculatorService {
-
+@Component("averageCalculator")
+public class AverageCalculatorFunction implements Function<TranslationDeliveredPayload, Collection<AverageDeliveryTime>> {
     private static final int LAST_SECOND = 59;
     private static final int DOUBLE_SCALE = 2;
     private static final int RESET_SECONDS = 0;
 
+    private AverageValidator averageValidator;
+
+    @Autowired
+    public AverageCalculatorFunction(AverageValidator averageValidator) {
+        this.averageValidator = averageValidator;
+    }
+
     /**
-     * @see AverageCalculatorService#calculateAverageTime(List, long)
+     * Calculates a moving average translation delivery time based on window size.
+     *
+     * @param translationDeliveredPayload events to calculate the average delivery time.
+     * @return A list of an average delivery time based on the {@code windowSizeMinutes}.
      */
     @Override
-    public Collection<AverageDeliveryTime> calculateAverageTime(@Nonnull final List<TranslationDelivered> deliveredList,
-                                                                final long windowSizeMinutes) {
-        Collection<AverageDeliveryTime> averageDeliveryTimeList = Collections.emptyList();
+    public Collection<AverageDeliveryTime> apply(@Nonnull TranslationDeliveredPayload translationDeliveredPayload) {
+        averageValidator.validate(translationDeliveredPayload);
 
-        if (!deliveredList.isEmpty()) {
-            averageDeliveryTimeList = calculateAverageTime(deliveredList, getLastPosition(deliveredList), windowSizeMinutes);
+        Collection<AverageDeliveryTime> averageDeliveryTimeList = Collections.emptyList();
+        List<TranslationDelivered> transactionServiceList = normalizeTranslationEvent(translationDeliveredPayload);
+
+        if (!transactionServiceList.isEmpty()) {
+            averageDeliveryTimeList = calculateAverageTime(transactionServiceList, getLastPosition(transactionServiceList), translationDeliveredPayload.getWindowSize());
         }
 
         return averageDeliveryTimeList;
+    }
+
+    private List<TranslationDelivered> normalizeTranslationEvent(@Nonnull TranslationDeliveredPayload translationDeliveredPayload) {
+        return (null == translationDeliveredPayload.getTransactionServiceList())
+                ? Collections.emptyList()
+                : translationDeliveredPayload.getTransactionServiceList().stream()
+                .filter(event -> TRANSLATION_DELIVERED.getName().equalsIgnoreCase(event.getEventName()))
+                .collect(Collectors.toList());
     }
 
     private Date getLastPosition(@Nonnull final List<TranslationDelivered> list) {
@@ -46,13 +73,9 @@ public class AverageCalculatorServiceImpl implements AverageCalculatorService {
         return Date.from(dateTimeAsLocal.toInstant());
     }
 
-    /**
-     * @see AverageCalculatorService#calculateAverageTime(List, Date, long)
-     */
-    @Override
-    public Collection<AverageDeliveryTime> calculateAverageTime(@Nonnull final List<TranslationDelivered> deliveredList,
-                                                                @Nonnull final Date baseDatetime,
-                                                                final long windowSizeMinutes) {
+    private Collection<AverageDeliveryTime> calculateAverageTime(@Nonnull final List<TranslationDelivered> deliveredList,
+                                                                 @Nonnull final Date baseDatetime,
+                                                                 final long windowSizeMinutes) {
         final List<AverageDeliveryTime> averageDeliveryTimes = new ArrayList<>();
         final long firstPosition = windowSizeMinutes - 1L;
 

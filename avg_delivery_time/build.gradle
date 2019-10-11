@@ -19,6 +19,8 @@ dependencies {
             [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.4.1'],
             [group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'],
             [group: 'com.google.guava', name: 'guava', version: '28.0-jre'],
+            [group: 'org.glassfish.jersey.core', name: 'jersey-client', version: '2.25.1'],
+            [group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: '2.25.1'],
             [group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'],
             [group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25']
     )

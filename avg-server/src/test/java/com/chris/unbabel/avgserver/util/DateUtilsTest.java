@@ -1,4 +1,4 @@
-package com.chris.unbabel.util;
+package com.chris.unbabel.avgserver.util;
 
 import org.junit.Test;
 

@@ -31,12 +31,12 @@ public final class ArgumentChecker {
         }
     }
 
-    public static int getArgumentWindow(String... args) throws TranslationEventException {
-        return Integer.parseInt(getArg(ARG_WINDOW_SIZE, args).trim());
+    public static int getArgumentWindow(Collection<String> properties) throws TranslationEventException {
+        return Integer.parseInt(getArg(ARG_WINDOW_SIZE, properties).trim());
     }
 
-    public static String getArgumentFile(String... args) throws TranslationEventException {
-        return getArg(ARG_INPUT_FILE, args);
+    public static String getArgumentFile(Collection<String> properties) throws TranslationEventException {
+        return getArg(ARG_INPUT_FILE, properties);
     }
 
     public static void checkInvalidArguments(String... args) {
@@ -53,11 +53,11 @@ public final class ArgumentChecker {
                         "The argument(s) (" + String.join(", ", invalidArguments) + ") is not supported. Type --help for help.\n\n");
     }
 
-    private static String getArg(String token, String... args) throws TranslationEventException {
-        return Stream.of(args)
+    private static String getArg(String token, Collection<String> properties) throws TranslationEventException {
+        return properties.stream()
                 .filter(arg -> arg.startsWith(token))
                 .map(arg -> arg.split(SPLIT_TOKEN))
-                .filter(arg -> args.length == 2)
+                .filter(arg -> properties.size() == 2)
                 .map(arg -> arg[1])
                 .findFirst()
                 .orElseThrow(TranslationEventException::new);

@@ -1,6 +1,6 @@
-package com.chris.unbabel.core;
+package com.chris.unbabel.avgserver.core;
 
-import com.chris.unbabel.util.DateUtils;
+import com.chris.unbabel.avgserver.util.DateUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;

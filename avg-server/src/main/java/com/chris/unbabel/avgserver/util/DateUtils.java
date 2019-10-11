@@ -1,4 +1,4 @@
-package com.chris.unbabel.util;
+package com.chris.unbabel.avgserver.util;
 
 import javax.annotation.Nonnull;
 import java.text.ParseException;
@@ -33,9 +33,10 @@ public final class DateUtils {
     }
 
     /**
+     * Map to date to local date time
      *
-     * @param date
-     * @return
+     * @param date date
+     * @return mapped date
      */
     public static LocalDateTime toDateTime(Date date) {
         return LocalDateTime.ofInstant(date.toInstant(),

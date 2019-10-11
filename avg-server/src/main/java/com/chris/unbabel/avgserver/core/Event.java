@@ -1,4 +1,4 @@
-package com.chris.unbabel.core;
+package com.chris.unbabel.avgserver.core;
 
 public enum Event {
     TRANSLATION_DELIVERED("translation_delivered");

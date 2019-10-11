@@ -1,4 +1,4 @@
-package com.chris.unbabel.core;
+package com.chris.unbabel.data;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,8 +11,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-import static com.chris.unbabel.util.DateUtils.DATE_FORMAT;
-
 /**
  * Average Delivery Time data object.
  * Used as output value.
@@ -22,7 +20,7 @@ import static com.chris.unbabel.util.DateUtils.DATE_FORMAT;
 public class AverageDeliveryTime implements Serializable {
     private static final long serialVersionUID = 8047746517213578294L;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private Date date;
 
     @JsonProperty("average_delivery_time")
@@ -41,7 +39,7 @@ public class AverageDeliveryTime implements Serializable {
         this.avgTime = avgTime;
     }
 
-    public static AverageDeliveryTime build(Date date, double avgTime){
+    public static AverageDeliveryTime build(Date date, double avgTime) {
         return new AverageDeliveryTime(date, avgTime);
     }
 
