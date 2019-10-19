@@ -1,5 +1,7 @@
 package com.unbabel
 
+import com.unbabel.Constants.arg_inputfile
+
 import scala.io.Source
 import scala.util.Try
 
@@ -10,11 +12,13 @@ object UnbabelCli  {
   def main(args: Array[String]): Unit = {
     println("Welcome to Unbabel Cli")
 
-    if (args.length == 0) printUsage()
-
     try {
       val arguments = parseArguments(Map(), args.toList)
 
+      if(arguments.size < 2) {
+        printUsage()
+        sys.exit(1)
+      }
 
     } catch {
       case ex: IllegalArgumentException =>
@@ -37,14 +41,15 @@ object UnbabelCli  {
         throw new IllegalArgumentException("Missing value for option " + option)
 
       case Constants.arg_inputfile :: value :: tail =>
-        parseArguments(map ++ Map(Constants.sym_inputfile -> value), tail)
-
+        val sym_inputfile = Symbol(arg_inputfile)
+        parseArguments(map ++ Map(sym_inputfile -> value), tail)
 
       case Constants.arg_windowsize :: value :: tail =>
-        if(Try(value.toLong).isFailure)
-          throw new IllegalArgumentException("The argument " + Constants.arg_windowsize + " should be a Long value")
+        val sym_windowsize = Symbol(arg_inputfile)
+        if(Try(value.toLong).isSuccess)
+          parseArguments(map ++ Map(sym_windowsize -> value.toLong), tail)
         else
-          parseArguments(map ++ Map(Constants.sym_windowsize -> value.toLong), tail)
+          throw new IllegalArgumentException("The argument " + Constants.arg_windowsize + " should be a Long value")
 
       case option :: tail =>
         throw new IllegalArgumentException("Unknown option " + option)
