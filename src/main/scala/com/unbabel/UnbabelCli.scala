@@ -45,9 +45,11 @@ object UnbabelCli  {
         parseArguments(map ++ Map(sym_inputfile -> value), tail)
 
       case Constants.arg_windowsize :: value :: tail =>
-        val sym_windowsize = Symbol(arg_inputfile)
-        if(Try(value.toLong).isSuccess)
+
+        if(Try(value.toLong).isSuccess) {
+          val sym_windowsize = Symbol(Constants.arg_windowsize)
           parseArguments(map ++ Map(sym_windowsize -> value.toLong), tail)
+        }
         else
           throw new IllegalArgumentException("The argument " + Constants.arg_windowsize + " should be a Long value")
 
