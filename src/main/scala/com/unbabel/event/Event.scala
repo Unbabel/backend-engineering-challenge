@@ -1,10 +1,10 @@
-package com.unbabel
+package com.unbabel.event
 
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.unbabel.Constants._
+import com.unbabel.config.Constants._
 
 case class Event(
                   @JsonProperty("timestamp") timestamp: String ,
@@ -17,7 +17,7 @@ case class Event(
                   @JsonProperty("nr_words") nr_words: Long
                 ) {
 
-  private val formatter = DateTimeFormatter.ofPattern(INPUTDATEFORMAT)
+  val formatter = DateTimeFormatter.ofPattern(INPUTDATEFORMAT)
   val timestampDateTime = LocalDateTime.parse(timestamp, formatter)
 
 }
