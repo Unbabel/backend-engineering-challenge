@@ -33,7 +33,8 @@ object UnbabelCli  {
         sys.exit(1)
     }
 
-    EventHandler.readEvents(inputFile)
+    val events = EventHandler.readEvents(inputFile)
+    EventHandler.slidingByTimestamp(windowSize, events)
 
     println("Exiting Unbabel Cli")
     sys.exit(0)
