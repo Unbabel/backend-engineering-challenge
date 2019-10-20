@@ -1,8 +1,7 @@
 package com.unbabel
 
-import com.unbabel.Constants.arg_inputfile
+import com.unbabel.Constants._
 
-import scala.io.Source
 import scala.util.Try
 
 object UnbabelCli  {
@@ -12,6 +11,9 @@ object UnbabelCli  {
   def main(args: Array[String]): Unit = {
     println("Welcome to Unbabel Cli")
 
+    var inputFile: String = ""
+    var windowSize : Long = 0
+
     try {
       val arguments = parseArguments(Map(), args.toList)
 
@@ -20,6 +22,10 @@ object UnbabelCli  {
         sys.exit(1)
       }
 
+      inputFile = arguments(Symbol(ARG_INPUTFILE)).asInstanceOf[String]
+      windowSize = arguments(Symbol(ARG_WINDOWSIZE)).asInstanceOf[Long]
+
+
     } catch {
       case ex: IllegalArgumentException =>
         printUsage()
@@ -27,12 +33,14 @@ object UnbabelCli  {
         sys.exit(1)
     }
 
+    EventHandler.readEvents(inputFile)
+
     println("Exiting Unbabel Cli")
     sys.exit(0)
   }
 
   @throws(classOf[IllegalArgumentException])
-  def parseArguments(map : ArgumentsMap, list: List[String]) : ArgumentsMap = {
+  private def parseArguments(map : ArgumentsMap, list: List[String]) : ArgumentsMap = {
 
     list match {
       case Nil => map
@@ -40,18 +48,14 @@ object UnbabelCli  {
       case option :: Nil =>
         throw new IllegalArgumentException("Missing value for option " + option)
 
-      case Constants.arg_inputfile :: value :: tail =>
-        val sym_inputfile = Symbol(arg_inputfile)
-        parseArguments(map ++ Map(sym_inputfile -> value), tail)
+      case ARG_INPUTFILE :: value :: tail =>
+        parseArguments(map ++ Map(Symbol(ARG_INPUTFILE) -> value), tail)
 
-      case Constants.arg_windowsize :: value :: tail =>
-
-        if(Try(value.toLong).isSuccess) {
-          val sym_windowsize = Symbol(Constants.arg_windowsize)
-          parseArguments(map ++ Map(sym_windowsize -> value.toLong), tail)
-        }
+      case ARG_WINDOWSIZE :: value :: tail =>
+        if(Try(value.toLong).isSuccess)
+          parseArguments(map ++ Map(Symbol(ARG_WINDOWSIZE) -> value.toLong), tail)
         else
-          throw new IllegalArgumentException("The argument " + Constants.arg_windowsize + " should be a Long value")
+          throw new IllegalArgumentException("The argument " + ARG_WINDOWSIZE + " should be a Long value")
 
       case option :: tail =>
         throw new IllegalArgumentException("Unknown option " + option)
@@ -59,7 +63,7 @@ object UnbabelCli  {
   }
 
 
-  def printUsage() : Unit = {
+  private def printUsage() : Unit = {
     val usage = "Usage: unbabel_cli --input_file <path_to_file> --window_size <size>"
     println(usage)
   }
