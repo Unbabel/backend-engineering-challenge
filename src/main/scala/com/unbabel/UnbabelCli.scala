@@ -2,13 +2,18 @@ package com.unbabel
 
 import com.unbabel.config.Constants._
 import com.unbabel.event.EventHandler
-
 import scala.util.Try
 
+/**
+  *
+  */
 object UnbabelCli  {
 
   case class Arguments(inputFile : String, windowSize : Long)
 
+  /** Parses a stream of events and produces an aggregated output.
+    * @param args Input arguments
+    */
   def main(args: Array[String]): Unit = {
     println("Welcome to Unbabel Cli")
 
@@ -27,6 +32,12 @@ object UnbabelCli  {
     sys.exit(0)
   }
 
+  /** Returns [[com.unbabel.UnbabelCli.Arguments]] with the input arguments
+    * @param map List of components. This should be an empty in the first iteration.
+    * @param list List of input keywords.
+    * @throws java.lang.IllegalArgumentException
+    * @return Input arguments parsed
+    */
   @throws(classOf[IllegalArgumentException])
   private def parseArguments(map : Map[String, Any], list: List[String]) : Arguments = {
 
@@ -55,6 +66,7 @@ object UnbabelCli  {
     }
   }
 
+  /** Prints the usage of the current executable */
   private def printUsage() : Unit = {
     val usage = "Usage: unbabel_cli --input_file <path_to_file> --window_size <size>"
     println(usage)

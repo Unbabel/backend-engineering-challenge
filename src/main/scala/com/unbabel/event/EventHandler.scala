@@ -14,11 +14,16 @@ import com.unbabel.config.Constants._
 
 import scala.io.Source
 
+/** Handler for working with [[com.unbabel.event.Event]] data */
 object EventHandler {
 
   private val mapper = new ObjectMapper() with ScalaObjectMapper
   mapper.registerModule(DefaultScalaModule)
 
+  /** Returns a sequence of [[com.unbabel.event.Event]] from a given JSON file
+    * @param filename Name of the file
+    * @return List of [[com.unbabel.event.Event]]
+    */
   def readEvents(filename:String) :  List[Event]  = {
     try {
       val jsonFile = Source.fromFile(filename)
@@ -42,6 +47,13 @@ object EventHandler {
     }
   }
 
+  /** Returns a sliding window for every minute between the minimum and maximum timestamp of the input sequence of events.
+    * To each position is added the list of events happening in the previous N minutes.
+    *
+    * @param windowSize Size of the sliding window
+    * @param events List of events
+    * @return Sliding window composed by the reference timestamp and the sequence of events happening in the previous N minutes
+    */
   def slidingWindowByTimestamp(windowSize: Long, events : List[Event]) : Seq[(LocalDateTime, List[Event])]  = {
     val orderedEvents = events.sortWith(_.timestamp < _.timestamp)
     val earliest = orderedEvents.head.timestampDateTime.truncatedTo(ChronoUnit.MINUTES)
@@ -57,6 +69,10 @@ object EventHandler {
       })
   }
 
+  /** Prints a moving average of the translation delivery time
+    *
+    * @param slidingWindow Input list of events distributed by a sliding window
+    */
   def printAverageDeliveryTime(slidingWindow: Seq[(LocalDateTime, List[Event])]) : Unit = {
 
     case class output(
