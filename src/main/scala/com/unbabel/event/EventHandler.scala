@@ -28,6 +28,7 @@ object EventHandler {
     try {
       val jsonFile = Source.fromFile(filename)
 
+      // Materializes each line of the JSON file in an Event. One of the exceptions bellow will be thrown in case the file content is not valid and, if so, the execution of the program will be interrupted.
       jsonFile
         .getLines()
         .map( line => mapper.readValue[Event](line))
@@ -55,13 +56,16 @@ object EventHandler {
     * @return Sliding window composed by the reference timestamp and the sequence of events happening in the previous N minutes
     */
   def slidingWindowByTimestamp(windowSize: Long, events : List[Event]) : Seq[(LocalDateTime, List[Event])]  = {
+    // Sort the events by timestamp
     val orderedEvents = events.sortWith(_.timestamp < _.timestamp)
     val earliest = orderedEvents.head.timestampDateTime.truncatedTo(ChronoUnit.MINUTES)
     val latest = orderedEvents.takeRight(1).head.timestampDateTime.truncatedTo(ChronoUnit.MINUTES)
 
+    // Create a sequence of minutes between the earliest event and the latest event
     (0.longValue() to earliest.until(latest, ChronoUnit.MINUTES) + 1)
       .map(i => earliest.plusMinutes(i))
       .map(datetime => {
+        // For each minute, attach a list of events happening within the defined windowSize
         datetime -> events.filter(e => {
           val diff = e.timestampDateTime.until(datetime, ChronoUnit.MILLIS)
           diff > 0 && diff < windowSize * MILLIS_PER_MIN
