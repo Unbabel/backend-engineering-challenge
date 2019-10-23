@@ -1,7 +1,11 @@
 package com.unbabel
 
+import java.io.FileNotFoundException
+
 import com.unbabel.config.Constants._
 import com.unbabel.event.EventHandler
+import com.unbabel.exception.InvalidEventException
+
 import scala.util.Try
 
 /** Unbabel Client shell */
@@ -27,20 +31,29 @@ object UnbabelCli  {
         sys.exit(1)
     }
 
-    // Reads events, create a sliding window and print the results to the user input
-    val events = EventHandler.readEvents(arguments.inputFile)
-    val slidingWindow = EventHandler.slidingWindowByTimestamp(arguments.windowSize, events)
-    EventHandler.printAverageDeliveryTime(slidingWindow)
+    // Reads events. Program is stopped in case of errors
+    val events = try EventHandler.readEvents(arguments.inputFile) catch {
+      case ex @ ( _: FileNotFoundException | _ : InvalidEventException ) =>
+        println(ex.getMessage)
+        sys.exit(1)
 
-    // Exit
+    }
+
+    // Creates the sliding windows and prints the result of the average delivery time
+    val slidingWindow = EventHandler.slidingWindowByTimestamp(arguments.windowSize, events)
+    val avgDeliveryTime = EventHandler.calculateAverageDeliveryTime(slidingWindow)
+    EventHandler.printAverageDeliveryTime(avgDeliveryTime)
+
+
     println("Exiting Unbabel Cli")
     sys.exit(0)
   }
 
+
   /** Returns [[com.unbabel.UnbabelCli.Arguments]] with the input arguments. This function is called recursively. On each iteration, the result is added to the map and list of
     * @param map Map of user input arguments already parsed. In the first iteration, an empty map is excepted.
     * @param list List of arguments yet to be parsed.
-    * @throws java.lang.IllegalArgumentException
+    * @throws java.lang.IllegalArgumentException Thrown when the arguments passed to the program are not the ones expected
     * @return Input arguments parsed.
     */
   @throws(classOf[IllegalArgumentException])
@@ -65,10 +78,10 @@ object UnbabelCli  {
         parseArguments(map ++ Map(ARG_INPUTFILE -> value), tail)
 
       case ARG_WINDOWSIZE :: value :: tail =>
-        if(Try(value.toLong).isSuccess)
+        if(Try(value.toLong).isSuccess && value.toLong >= 0 )
           parseArguments(map ++ Map(ARG_WINDOWSIZE -> value.toLong), tail)
         else
-          throw new IllegalArgumentException("The argument " + ARG_WINDOWSIZE + " should be a Long value")
+          throw new IllegalArgumentException("The argument " + ARG_WINDOWSIZE + " should be a non-negative Long value")
 
         // Throws an IllegalArgumentException if an unknown option is provided by the user
       case option :: tail =>
@@ -81,5 +94,4 @@ object UnbabelCli  {
     val usage = "Usage: unbabel_cli --input_file <path_to_file> --window_size <size>"
     println(usage)
   }
-
 }
