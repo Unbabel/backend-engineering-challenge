@@ -5,12 +5,12 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.core.io.JsonEOFException
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.exc.{MismatchedInputException, ValueInstantiationException}
 import com.fasterxml.jackson.module.scala.{DefaultScalaModule, ScalaObjectMapper}
 import com.unbabel.config.Constants._
+import com.unbabel.exception.InvalidEventException
 
 import scala.io.Source
 
@@ -22,8 +22,12 @@ object EventHandler {
 
   /** Returns a sequence of [[com.unbabel.event.Event]] from a given JSON file
     * @param filename Name of the file
+    * @throws com.unbabel.exception.InvalidEventException Returned when there are problems parsing the events
+    * @throws java.io.FileNotFoundException Returned when the file can  not be found
     * @return List of [[com.unbabel.event.Event]]
     */
+  @throws(classOf[InvalidEventException])
+  @throws(classOf[FileNotFoundException])
   def readEvents(filename:String) :  List[Event]  = {
     try {
       val jsonFile = Source.fromFile(filename)
@@ -36,15 +40,13 @@ object EventHandler {
 
     } catch {
       case ex: FileNotFoundException =>
-        println("File " + filename + " not found")
-        sys.exit(1)
+        throw ex
 
       case ex @ (
           _ : ValueInstantiationException |
           _ : JsonEOFException |
           _ : MismatchedInputException ) =>
-        println("Unable to parse events from input file. " + ex.getMessage)
-        sys.exit(1)
+        throw new InvalidEventException("Unable to parse events from input file. " + ex.getMessage)
     }
   }
 
@@ -56,6 +58,9 @@ object EventHandler {
     * @return Sliding window composed by the reference timestamp and the sequence of events happening in the previous N minutes
     */
   def slidingWindowByTimestamp(windowSize: Long, events : List[Event]) : Seq[(LocalDateTime, List[Event])]  = {
+
+    if(windowSize < 0 || events.isEmpty) return Seq()
+
     // Sort the events by timestamp
     val orderedEvents = events.sortWith(_.timestamp < _.timestamp)
     val earliest = orderedEvents.head.timestampDateTime.truncatedTo(ChronoUnit.MINUTES)
@@ -73,26 +78,29 @@ object EventHandler {
       })
   }
 
-  /** Prints a moving average of the translation delivery time
+  /** Calculates a moving average of the translation delivery time
     *
     * @param slidingWindow Input list of events distributed by a sliding window
     */
-  def printAverageDeliveryTime(slidingWindow: Seq[(LocalDateTime, List[Event])]) : Unit = {
-
-    case class output(
-                       @JsonProperty("date") date: String,
-                       @JsonProperty("average_delivery_time") avg_delivery_time: Double)
+  def calculateAverageDeliveryTime(slidingWindow: Seq[(LocalDateTime, List[Event])]) : Seq[AvgDeliveryTime] = {
 
     val formatter = DateTimeFormatter.ofPattern(OUTPUTDATEFORMAT)
-
     slidingWindow
       .map(list => {
         val date = list._1.format(formatter)
         val avg = list._2.map(_.duration).sum/list._2.length.toDouble
 
-        output(date, if(avg.isNaN) 0 else avg )
+        AvgDeliveryTime(date, if(avg.isNaN) 0 else avg )
       })
-      .foreach( value => println(mapper.writeValueAsString(value)))
+
+  }
+
+  /**
+    * Prints sliding window of Average Delivery Times
+    * @param out None
+    */
+  def printAverageDeliveryTime(out : Seq[AvgDeliveryTime]) : Unit = {
+    out.foreach(value => println(mapper.writeValueAsString(value)))
   }
 
 }
