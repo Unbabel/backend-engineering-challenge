@@ -14,13 +14,13 @@ import com.unbabel.exception.InvalidEventException
 
 import scala.io.Source
 
-/** Handler for working with [[com.unbabel.event.Event]] data */
 object EventHandler {
 
   private val mapper = new ObjectMapper() with ScalaObjectMapper
   mapper.registerModule(DefaultScalaModule)
 
   /** Returns a sequence of [[com.unbabel.event.Event]] from a given JSON file
+    *
     * @param filename Name of the file
     * @throws com.unbabel.exception.InvalidEventException Returned when there are problems parsing the events
     * @throws java.io.FileNotFoundException Returned when the file can  not be found
@@ -32,7 +32,8 @@ object EventHandler {
     try {
       val jsonFile = Source.fromFile(filename)
 
-      // Materializes each line of the JSON file in an Event. One of the exceptions bellow will be thrown in case the file content is not valid and, if so, the execution of the program will be interrupted.
+      // Materializes each line of the JSON file in an Event.
+      // Exceptions thrown in case the file does not exist or whose content is not valid.
       jsonFile
         .getLines()
         .map( line => mapper.readValue[Event](line))
@@ -50,12 +51,12 @@ object EventHandler {
     }
   }
 
-  /** Returns a sliding window for every minute between the minimum and maximum timestamp of the input sequence of events.
-    * To each position is added the list of events happening in the previous N minutes.
+  /** Generates a minute-by-minute sliding window between the min and max timestamp of the input events.
+    * To each position is attached the events that happened in the previous N minutes.
     *
-    * @param windowSize Size of the sliding window
+    * @param windowSize Size of the window
     * @param events List of events
-    * @return Sliding window composed by the reference timestamp and the sequence of events happening in the previous N minutes
+    * @return Minute-by-minute sliding window of events
     */
   def slidingWindowByTimestamp(windowSize: Long, events : List[Event]) : Seq[(LocalDateTime, List[Event])]  = {
 
@@ -95,8 +96,8 @@ object EventHandler {
 
   }
 
-  /**
-    * Prints sliding window of Average Delivery Times
+  /** Prints sliding window of Average Delivery Times
+    *
     * @param out None
     */
   def printAverageDeliveryTime(out : Seq[AvgDeliveryTime]) : Unit = {
