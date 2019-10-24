@@ -1,5 +1,9 @@
 package com.unbabel.exception
 
+/** Exception thrown in case a given [[com.unbabel.event.Event]] is not valid
+  *
+  * @param message Message to be sent to the user that summarizes what caused the problem
+  */
 class InvalidEventException(message: String) extends Exception(message) {
 
   def this(message: String, cause: Throwable) {

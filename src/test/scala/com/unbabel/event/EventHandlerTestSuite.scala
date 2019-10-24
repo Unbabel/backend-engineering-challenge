@@ -8,7 +8,10 @@ import com.unbabel.config.Constants.OUTPUTDATEFORMAT
 import com.unbabel.exception.InvalidEventException
 import org.scalatest.FunSuite
 
-
+/** Tests the method defined in the object  [[com.unbabel.event.EventHandler]]
+  *
+  * The following functions are tested: readEvents, slidingWindowByTimestamp and calculateAverageDeliveryTime
+  */
 class EventHandlerTestSuite extends FunSuite{
 
   private val event1 = Event("2018-12-26 18:11:08.509654","5aa5b2f39f7254a75aa5","en","fr","easyjet","translation_delivered",20,30)

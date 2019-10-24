@@ -24,7 +24,7 @@ object UnbabelCli  {
     */
   def main(args: Array[String]): Unit = {
 
-    // Parse input arguments. Program stopped in case of IllegalArgumentException.
+    // Parse input arguments. Program stops in case of IllegalArgumentException.
     val arguments = try parseArguments(Map(), args.toList) catch {
       case ex: IllegalArgumentException =>
         printUsage()
@@ -32,7 +32,7 @@ object UnbabelCli  {
         sys.exit(1)
     }
 
-    // Reads events. Program stopped in case of errors
+    // Reads events. Program stops in case of errors.
     val events = try EventHandler.readEvents(arguments.inputFile) catch {
       case ex @ ( _: FileNotFoundException | _ : InvalidEventException ) =>
         println(ex.getMessage)
@@ -72,7 +72,7 @@ object UnbabelCli  {
 
       // Throws an IllegalArgumentException if an argument is provided without value.
       case option :: Nil =>
-        throw new IllegalArgumentException("Missing value for option " + option)
+        throw new IllegalArgumentException("Missing value for argument " + option)
 
       // Recursively calls this method in case a known option is provided as expected.
       // Throws an IllegalArgumentException in case the value provided isn't castable to the expected type.
@@ -83,11 +83,11 @@ object UnbabelCli  {
         if(Try(value.toLong).isSuccess && value.toLong >= 0 )
           parseArguments(argsParsed ++ Map(ARG_WINDOWSIZE -> value.toLong), tail)
         else
-          throw new IllegalArgumentException("The argument " + ARG_WINDOWSIZE + " should be a non-negative Long value")
+          throw new IllegalArgumentException("The argument " + ARG_WINDOWSIZE + " receives a non-negative number")
 
         // Throws an IllegalArgumentException if an unknown option is provided by the user
       case option :: tail =>
-        throw new IllegalArgumentException("Unknown option " + option)
+        throw new IllegalArgumentException("Unknown argument " + option)
     }
   }
 

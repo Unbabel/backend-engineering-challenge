@@ -2,8 +2,9 @@ package com.unbabel.event
 
 import org.scalatest.FunSuite
 
-/**
-  * Tests event creation
+/** Tests event creation
+  *
+  * This suite tests the class [[com.unbabel.event.Event]] by creating both valid and invalid events.
   */
 class EventTestSuite extends FunSuite {
 
