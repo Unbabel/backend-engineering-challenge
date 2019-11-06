@@ -68,21 +68,31 @@ The output file would be something in the following format.
 {"date": "2018-12-26 18:24:00", "average_delivery_time": 42.5}
 ```
 
-#### Notes
+### Project structure
 
-Before jumping right into implementation we advise you to think about the solution first. We will evaluate, not only if your solution works but also the following aspects:
+```
+├── lib                   # Classes and business logic
+├── tests                 # Unit tests and files to support tests
+├── .gitignore
+├── cly.py                
+├── Makefile              # Helper to run unit tests
+└── README.md
+```
+### How to run
 
-+ Simple and easy to read code. Remember that [simple is not easy](https://www.infoq.com/presentations/Simple-Made-Easy)
-+ Include a README.md that briefly describes how to build and run your code
-+ Be consistent in your code. 
+On root folder, please run:
+```
+python3 cli.py --window-size <value> --input-file <json_file>
+```
 
-Feel free to, in your solution, include some your considerations while doing this challenge. We want you to solve this challenge in the language you feel most confortable with. Our machines run Python, Ruby, Scala, Java, Clojure, Elixir and Nodejs. If you are thinking of using any other programming language please reach out to us first 🙏.
+### To run unit tests
 
-Also if you have any problem please **open an issue**. 
+On root folder, please run:
+```
+make test
+```
 
-Good luck and may the force be with you
-
-#### Extra points
-
-If you feeling creative feel free to consider any additional cases you might find interesting. Remember this is a bonus, focus on delivering the solution first.
-
+### What's is missing?
+  * Improve validation in json file (malformed json and validate more attributes)
+	* Decrease responsability on EventProcessor
+	* Reduce logic in cli.py on main function
