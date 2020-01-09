@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 @Component
 public class EventReaderHelper {
 
-    public boolean eventBelongsToWindow(Event event, LocalDateTime start, LocalDateTime end) {
+    private boolean eventBelongsToWindow(Event event, LocalDateTime start, LocalDateTime end) {
         LocalDateTime eventTime = event.getTimestamp();
 
         return (eventTime.isEqual(start) || eventTime.isAfter(start)) && (eventTime.isEqual(end) || eventTime.isBefore(end));

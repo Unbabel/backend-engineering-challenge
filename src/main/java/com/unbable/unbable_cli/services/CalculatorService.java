@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -34,20 +35,25 @@ public class CalculatorService {
     @Autowired
     private OutputWriterHelper outputWriterHelper;
 
-    public void generateAggregatedOutput(ApplicationArguments arguments) throws IOException {
+    public File generateAggregatedOutput(ApplicationArguments arguments) throws IOException {
         List<Output> outputList = getOutputList(arguments);
-        outputWriterHelper.writeListToFile(outputList);
+        return outputWriterHelper.writeListToFile(outputList, "output.json");
     }
 
     private List<Output> getOutputList(ApplicationArguments arguments) throws IOException {
         Input input = optionReaderHelper.getOptions(arguments);
         List<Event> events = fileParserHelper.parseFileEvents(input.getInputFile());
-        LocalDateTime startMinute = events.get(0).getTimestamp().truncatedTo(ChronoUnit.MINUTES);
-        LocalDateTime endMinute = events.get(events.size() - 1).getTimestamp().truncatedTo(ChronoUnit.MINUTES).plusMinutes(1);
-        log.info("start {} end {}", startMinute, endMinute);
-        log.info("window_size: {}, events: {}", input.getWindowSize(), events);
 
-        return calculateAverage(startMinute, endMinute, input.getWindowSize(), events);
+        if (!events.isEmpty()) {
+            LocalDateTime startMinute = events.get(0).getTimestamp().truncatedTo(ChronoUnit.MINUTES);
+            LocalDateTime endMinute = events.get(events.size() - 1).getTimestamp().truncatedTo(ChronoUnit.MINUTES).plusMinutes(1);
+            log.info("start {} end {}", startMinute, endMinute);
+            log.info("window_size: {}, events: {}", input.getWindowSize(), events);
+
+            return calculateAverage(startMinute, endMinute, input.getWindowSize(), events);
+        }
+
+        throw new IOException("The file doesn't have valid events to process");
     }
 
     private List<Output> calculateAverage(LocalDateTime startMinute, LocalDateTime endMinute, int windowSize, List<Event> events) {

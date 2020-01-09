@@ -25,14 +25,14 @@ public class FileParserHelper {
 
     public List<Event> parseFileEvents(File inputFile) throws IOException {
         return Files.readAllLines(Paths.get(inputFile.getAbsolutePath()))
-            .stream()
-            .map(this::mapEvent)
-            .filter(Objects::nonNull)
-            .sorted(Comparator.comparing(Event::getTimestamp))
-            .collect(Collectors.toList());
+                .stream()
+                .map(this::mapEvent)
+                .filter(Objects::nonNull)
+                .sorted(Comparator.comparing(Event::getTimestamp))
+                .collect(Collectors.toList());
     }
 
-    public Event mapEvent(String line) {
+    private Event mapEvent(String line) {
         Event event = null;
 
         try {

@@ -21,8 +21,8 @@ public class OutputWriterHelper {
     @Autowired
     private ObjectMapper objectMapper;
 
-    public void writeListToFile(List<Output> outputList) throws IOException {
-        File outputFile = new File("output.json");
+    public File writeListToFile(List<Output> outputList, String outputName) {
+        File outputFile = new File(outputName);
         Path path = Paths.get(outputFile.getAbsolutePath());
         if (outputFile.exists() && outputFile.length() > 0) {
             outputFile.delete();
@@ -42,5 +42,7 @@ public class OutputWriterHelper {
                     log.info("The output {}, could not be write into the file", it, e);
                 }
             });
+
+        return outputFile;
     }
 }
