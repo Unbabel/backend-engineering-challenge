@@ -26,7 +26,7 @@ public class FileParserHelper extends ParserHelper {
     public List<Event> parseEvents(Input input) throws IOException {
         return Files.readAllLines(Paths.get(input.getInputFile().getAbsolutePath()))
             .stream()
-            .map(super::mapEvent)
+            .map(this::mapEvent)
             .filter(Objects::nonNull)
             .sorted(Comparator.comparing(Event::getTimestamp))
             .collect(Collectors.toList());

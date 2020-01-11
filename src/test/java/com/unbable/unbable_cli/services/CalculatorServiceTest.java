@@ -2,6 +2,7 @@ package com.unbable.unbable_cli.services;
 
 import com.unbable.unbable_cli.helpers.OptionReaderHelper;
 import com.unbable.unbable_cli.helpers.files.FileParserHelper;
+import com.unbable.unbable_cli.helpers.files.FileWriterHelper;
 import com.unbable.unbable_cli.models.Event;
 import com.unbable.unbable_cli.models.Input;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.DefaultApplicationArguments;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doNothing;
 
 @SpringBootTest
 public class CalculatorServiceTest {
@@ -34,6 +37,9 @@ public class CalculatorServiceTest {
 
     @Mock
     private FileParserHelper fileParserHelper;
+
+    @MockBean
+    private FileWriterHelper fileWriterHelper;
 
     @Autowired
     @InjectMocks
@@ -46,7 +52,7 @@ public class CalculatorServiceTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        input = new Input(10, new File("events.json"));
+        input = new Input(10, new File("src/test/resources/events.json"));
         Event event = new Event();
         event.setTimestamp(LocalDateTime.now());
         event.setDuration(10);
@@ -63,6 +69,7 @@ public class CalculatorServiceTest {
                     input
                 );
             when(fileParserHelper.parseEvents(ArgumentMatchers.any(Input.class))).thenReturn(events);
+            doNothing().when(fileWriterHelper).write(ArgumentMatchers.anyList(), ArgumentMatchers.anyString());
             calculatorService.generateAggregatedOutput(applicationArguments);
             assertTrue(true);
         } catch (IOException e) {
@@ -80,6 +87,7 @@ public class CalculatorServiceTest {
                     input
                 );
             when(fileParserHelper.parseEvents(ArgumentMatchers.any(Input.class))).thenReturn(Collections.emptyList());
+            doNothing().when(fileWriterHelper).write(ArgumentMatchers.anyList(), ArgumentMatchers.anyString());
             calculatorService.generateAggregatedOutput(applicationArguments);
             fail();
         } catch (IOException e) {

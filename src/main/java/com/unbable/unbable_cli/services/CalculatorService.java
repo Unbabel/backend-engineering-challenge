@@ -1,6 +1,6 @@
 package com.unbable.unbable_cli.services;
 
-import com.unbable.unbable_cli.helpers.OutputWriterHelper;
+import com.unbable.unbable_cli.helpers.files.FileWriterHelper;
 import com.unbable.unbable_cli.models.Event;
 import com.unbable.unbable_cli.models.Input;
 import com.unbable.unbable_cli.models.Output;
@@ -32,7 +32,7 @@ public class CalculatorService {
     private EventReaderHelper eventReaderHelper;
 
     @Autowired
-    private OutputWriterHelper outputWriterHelper;
+    private FileWriterHelper fileWriterHelper;
 
     /**
      * This method is the one in charge to get the outputList and call the OutputWriterHelper with it
@@ -41,7 +41,7 @@ public class CalculatorService {
      */
     public void generateAggregatedOutput(ApplicationArguments arguments) throws IOException {
         List<Output> outputList = getOutputList(arguments);
-        outputWriterHelper.write(outputList, "output.json");
+        fileWriterHelper.write(outputList, "output.json");
     }
 
     /**
