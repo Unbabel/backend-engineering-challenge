@@ -11,3 +11,5 @@ RUN make test
 RUN make install
 
 RUN enki -h
+
+RUN make test-cli
