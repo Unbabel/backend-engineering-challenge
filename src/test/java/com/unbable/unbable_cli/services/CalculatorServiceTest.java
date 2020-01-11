@@ -1,7 +1,7 @@
 package com.unbable.unbable_cli.services;
 
-import com.unbable.unbable_cli.helpers.FileParserHelper;
 import com.unbable.unbable_cli.helpers.OptionReaderHelper;
+import com.unbable.unbable_cli.helpers.files.FileParserHelper;
 import com.unbable.unbable_cli.models.Event;
 import com.unbable.unbable_cli.models.Input;
 import org.junit.jupiter.api.BeforeEach;
@@ -62,10 +62,9 @@ public class CalculatorServiceTest {
                 .thenReturn(
                     input
                 );
-            when(fileParserHelper.parseFileEvents(ArgumentMatchers.any(File.class))).thenReturn(events);
-            File outputFile = calculatorService.generateAggregatedOutput(applicationArguments);
-            assertTrue(outputFile.exists());
-            assertTrue(outputFile.length() > 0);
+            when(fileParserHelper.parseEvents(ArgumentMatchers.any(Input.class))).thenReturn(events);
+            calculatorService.generateAggregatedOutput(applicationArguments);
+            assertTrue(true);
         } catch (IOException e) {
             fail();
         }
@@ -80,10 +79,9 @@ public class CalculatorServiceTest {
                 .thenReturn(
                     input
                 );
-            when(fileParserHelper.parseFileEvents(ArgumentMatchers.any(File.class))).thenReturn(Collections.emptyList());
-            File outputFile = calculatorService.generateAggregatedOutput(applicationArguments);
-            assertTrue(outputFile.exists());
-            assertTrue(outputFile.length() > 0);
+            when(fileParserHelper.parseEvents(ArgumentMatchers.any(Input.class))).thenReturn(Collections.emptyList());
+            calculatorService.generateAggregatedOutput(applicationArguments);
+            fail();
         } catch (IOException e) {
             assertEquals("The file doesn't have valid events to process", e.getMessage());
         }

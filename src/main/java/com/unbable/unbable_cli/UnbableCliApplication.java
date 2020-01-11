@@ -8,7 +8,6 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.io.File;
 import java.io.IOException;
 
 @SpringBootApplication
@@ -25,8 +24,8 @@ public class UnbableCliApplication implements ApplicationRunner {
 	@Override
 	public void run(ApplicationArguments arguments) {
 		try {
-			File output = calculatorService.generateAggregatedOutput(arguments);
-			log.info("Output generated successfully at {}", output);
+			calculatorService.generateAggregatedOutput(arguments);
+			log.info("Output generated successfully");
 		} catch (IOException exception) {
 			log.error("Error running the app", exception);
 		}

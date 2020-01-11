@@ -11,10 +11,22 @@ import java.util.List;
 @Component
 public class OptionReaderHelper {
 
+    /**
+     * This method is in charge of mapping all the provided arguments into an Input object
+     * @param arguments provided args from the console
+     * @return Input object with the options provided
+     * @throws IOException exception in case that is something wrong or missing
+     */
     public Input getOptions(ApplicationArguments arguments) throws IOException {
         return new Input(getWindowSize(arguments), getInputFile(arguments));
     }
 
+    /**
+     * This method perform all the validations for the input file option
+     * @param arguments provided args from the console
+     * @return File that holds the events to be read
+     * @throws IOException exception in case there is something wrong with this option
+     */
     private File getInputFile(ApplicationArguments arguments) throws IOException {
         if (arguments.containsOption("input_file")) {
             List<String> inputFileArg = arguments.getOptionValues("input_file");
@@ -30,12 +42,19 @@ public class OptionReaderHelper {
         throw new IOException("No input file provided");
     }
 
-    private Integer getWindowSize(ApplicationArguments arguments) throws IOException {
+    /**
+     * This method perform all the validations for the window size option
+     * @param arguments provided args from the console
+     * @return window of time to be checked
+     * @throws IOException exception in case there is something wrong with this option
+     */
+    private int getWindowSize(ApplicationArguments arguments) throws IOException {
         if (arguments.containsOption("window_size")) {
             List<String> windowSizeArg = arguments.getOptionValues("window_size");
+            int windowSize;
 
             try {
-                int windowSize = Integer.parseInt(windowSizeArg.get(0));
+                windowSize = Integer.parseInt(windowSizeArg.get(0));
 
                 if (windowSize<1) {
                     throw new IOException("The window size must be a positive integer");
@@ -44,7 +63,7 @@ public class OptionReaderHelper {
                 throw new IOException("The window size must be a valid integer");
             }
 
-            return Integer.valueOf(windowSizeArg.get(0));
+            return windowSize;
         }
 
         throw new IOException("No window size provided");

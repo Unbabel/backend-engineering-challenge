@@ -1,6 +1,8 @@
 package com.unbable.unbable_cli.helpers;
 
+import com.unbable.unbable_cli.helpers.files.FileParserHelper;
 import com.unbable.unbable_cli.models.Event;
+import com.unbable.unbable_cli.models.Input;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @SpringBootTest
-public class FileParserHelperTest {
+public class ParserHelperTest {
 
     @Autowired
     private FileParserHelper fileParserHelper;
@@ -22,9 +24,10 @@ public class FileParserHelperTest {
     @Test
     public void parse_file_events_successfully() {
         File inputFile = new File("src/test/resources/events.json");
+        Input input = new Input(10, inputFile);
 
         try {
-            List<Event> events = fileParserHelper.parseFileEvents(inputFile);
+            List<Event> events = fileParserHelper.parseEvents(input);
             assertFalse(events.isEmpty());
         } catch (IOException e) {
             fail();
@@ -34,9 +37,10 @@ public class FileParserHelperTest {
     @Test
     public void parse_file_events_wrong_lines() {
         File inputFile = new File("src/test/resources/custom_events.json");
+        Input input = new Input(10, inputFile);
 
         try {
-            List<Event> events = fileParserHelper.parseFileEvents(inputFile);
+            List<Event> events = fileParserHelper.parseEvents(input);
             assertTrue(events.isEmpty());
         } catch (IOException e) {
             fail();
