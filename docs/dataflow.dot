@@ -1,0 +1,10 @@
+digraph "classes" {
+charset="utf-8"
+rankdir=TB
+
+"events jsonl" -> "JsonParser"
+"JsonParser" -> "Filter"
+"Filter" -> "PerMinuteMovingAverageCalculator"
+"PerMinuteMovingAverageCalculator" -> "JsonDumper"
+"JsonDumper" -> "moving average results jsonl"
+}
