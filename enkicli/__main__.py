@@ -1,5 +1,6 @@
 import argparse
 
+from enki.Filter import Filter
 from enki.JsonDumper import JsonDumper
 from enki.JsonParser import JsonParser
 from enki.PerMinuteMovingAverageCalculator import PerMinuteMovingAverageCalculator
@@ -17,13 +18,14 @@ def main():
 
     args = parser.parse_args()
 
-    process(args.input_file, args.window_size)
+    chain = get_moving_average_chain(args.window_size)
+    process(args.input_file, chain)
 
-
-def process(input_file: str, window_size: int):
-    chain = ProcessorChain(print,
+def get_moving_average_chain(window_size: int):
+    return ProcessorChain(print,
                            [
                                lambda sink: JsonParser(sink),
+                               lambda sink: Filter(sink, lambda x: x["event_name"] == "translation_delivered"),
                                lambda sink: PerMinuteMovingAverageCalculator(
                                    sink,
                                    window_size,
@@ -32,6 +34,7 @@ def process(input_file: str, window_size: int):
                                lambda sink: JsonDumper(sink),
                            ])
 
+def process(input_file: str, chain: ProcessorChain):
     with open(input_file, 'rt') as f:
         for line in f:
             chain.consume(line)
