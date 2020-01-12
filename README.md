@@ -1,88 +1,89 @@
-# Backend Engineering Challenge
+# enki - translation event processor
 
+Calculates moving average of translation events.
 
-Welcome to our Engineering Challenge repository 🖖
+_Naming_: In the Sumerian epic entitled _Enmerkar and the Lord of Aratta_, people are imploring **Enki** to restore the one language, hence unbabeling the [confusion](https://en.wikipedia.org/wiki/Enki#Confuser_of_languages).
 
-If you found this repository it probably means that you are participating in our recruitment process. Thank you for your time and energy. If that's not the case please take a look at our [openings](https://unbabel.com/careers/) and apply!
+## Quick Start
 
-Please fork this repo before you start working on the challenge, read it careful and take your time and think about the solution. Also, please fork this repository because we will evaluate the code on the fork.
+Tested with python 3.8.
 
-This is an opportunity for us both to work together and get to know each other in a more technical way. If have some doubt please open and issue and we'll reach out to help.
-
-Good luck!
-
-## Challenge Scenario
-
-At Unbabel we deal with a lot of translation data. One of the metrics we use for our clients' SLAs is the delivery time of a translation. 
-
-In the context of this problem, and to keep things simple, our translation flow is going to be modeled as only one event.
-
-### *translation_delivered*
-
-Example:
-
-```json
-{
-	"timestamp": "2018-12-26 18:12:19.903159",
-	"translation_id": "5aa5b2f39f7254a75aa4",
-	"source_language": "en",
-	"target_language": "fr",
-	"client_name": "easyjet",
-	"event_name": "translation_delivered",
-	"duration": 20,
-	"nr_words": 100
-}
+```bash
+make install
+enki -h
 ```
 
-## Challenge Objective
-
-Your mission is to build a simple command line application that parses a stream of events and produces an aggregated output. In this case, we're interested in calculating, for every minute, a moving average of the translation delivery time for the last X minutes.
-
-If we want to count, for each minute, the moving average delivery time of all translations for the past 10 minutes we would call your application like (feel free to name it anything you like!).
-
-	unbabel_cli --input_file events.json --window_size 10
-	
-The input file format would be something like:
-
-	{"timestamp": "2018-12-26 18:11:08.509654","translation_id": "5aa5b2f39f7254a75aa5","source_language": "en","target_language": "fr","client_name": "easyjet","event_name": "translation_delivered","nr_words": 30, "duration": 20}
-	{"timestamp": "2018-12-26 18:15:19.903159","translation_id": "5aa5b2f39f7254a75aa4","source_language": "en","target_language": "fr","client_name": "easyjet","event_name": "translation_delivered","nr_words": 30, "duration": 31}
-	{"timestamp": "2018-12-26 18:23:19.903159","translation_id": "5aa5b2f39f7254a75bb33","source_language": "en","target_language": "fr","client_name": "booking","event_name": "translation_delivered","nr_words": 100, "duration": 54}
-
-
-The output file would be something in the following format.
-
 ```
-{"date": "2018-12-26 18:11:00", "average_delivery_time": 0}
-{"date": "2018-12-26 18:12:00", "average_delivery_time": 20}
-{"date": "2018-12-26 18:13:00", "average_delivery_time": 20}
-{"date": "2018-12-26 18:14:00", "average_delivery_time": 20}
-{"date": "2018-12-26 18:15:00", "average_delivery_time": 20}
-{"date": "2018-12-26 18:16:00", "average_delivery_time": 25.5}
-{"date": "2018-12-26 18:17:00", "average_delivery_time": 25.5}
-{"date": "2018-12-26 18:18:00", "average_delivery_time": 25.5}
-{"date": "2018-12-26 18:19:00", "average_delivery_time": 25.5}
-{"date": "2018-12-26 18:20:00", "average_delivery_time": 25.5}
-{"date": "2018-12-26 18:21:00", "average_delivery_time": 25.5}
-{"date": "2018-12-26 18:22:00", "average_delivery_time": 31}
-{"date": "2018-12-26 18:23:00", "average_delivery_time": 31}
-{"date": "2018-12-26 18:24:00", "average_delivery_time": 42.5}
+usage: enki [-h] --input_file INPUT_FILE --window_size WINDOW_SIZE
+
+enki - translation event processor
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --input_file INPUT_FILE
+                        input file name, jsonl
+  --window_size WINDOW_SIZE
+                        moving average window size
 ```
 
-#### Notes
+## Testing
 
-Before jumping right into implementation we advise you to think about the solution first. We will evaluate, not only if your solution works but also the following aspects:
+Building the docker container will run [unit tests](tests) and [CLI tests](tests/data_tests.sh).
 
-+ Simple and easy to read code. Remember that [simple is not easy](https://www.infoq.com/presentations/Simple-Made-Easy)
-+ Include a README.md that briefly describes how to build and run your code
-+ Be consistent in your code. 
+CLI tests execute `enki` for each json file in [data](tests/data) and expect the produced result to be exactly equal to the corresponding `*.expected` file.
 
-Feel free to, in your solution, include some your considerations while doing this challenge. We want you to solve this challenge in the language you feel most confortable with. Our machines run Python, Ruby, Scala, Java, Clojure, Elixir and Nodejs. If you are thinking of using any other programming language please reach out to us first 🙏.
+```bash
+docker build .
+```
 
-Also if you have any problem please **open an issue**. 
+## Architecture
 
-Good luck and may the force be with you
+_enki_ is designed as a stream processing library and a CLI tool that can operate according to the [specifications](SPEC.md).
 
-#### Extra points
+The architecture provides maintainability, ease of change and extensibility - all while being simple.
 
-If you feeling creative feel free to consider any additional cases you might find interesting. Remember this is a bonus, focus on delivering the solution first.
+![class diagram](docs/classes.png)
 
+The library has the [StreamProcessor](enki/StreamProcessor.py) and the [ProcessorChain](enki/ProcessorChain.py) classes as entry points. Implementations of the `StreamProcessor` class can be configured to run one after another, passing their input to their immediate follower, using the `ProcessorChain`.
+
+New types of `StreamProcessor` implementations can be added inside or outside the library to be used with the CLI application with ease. As an example, [Filter](enki/Filter.py) class is added that filters out the stream based on a predicate.
+
+Input and output to the library does not have to be in [JSONL](http://jsonlines.org/) format, a new format can be supported by adding the parser and/or dumper type to the processor chain in the [cli main](enkicli/__main__.py). If your data is already a python dict, no need to use [JsonParser](enki/JsonParser.py) and [JsonDumper](enki/JsonDumper.py) as intermediate stream processors operate on python dicts.
+
+Parsing, processing and writing output is implemented in the [cli main](enkicli/__main__.py):`get_moving_average_chain` method as:
+
+```py
+def get_moving_average_chain(window_size: int):
+    return ProcessorChain(print, [
+        lambda sink: JsonParser(sink),
+        lambda sink: Filter(sink, lambda x: x["event_name"] == "translation_delivered"),
+        lambda sink: PerMinuteMovingAverageCalculator(
+            sink,
+            window_size,
+            lambda x: "%s:00" % x["timestamp"][:16],
+            lambda x: x["duration"], "date", "average_delivery_time"),
+        lambda sink: JsonDumper(sink),
+    ])
+```
+
+Chain executes top-down, sinks of the processors are tied to the following processor in reverse order in _ProcessorChain_ constructor.
+
+## Data flow
+
+As per the [specifications](SPEC.md), a jsonl file containing translation events is processed:
+
+![data flow](docs/dataflow.png)
+
+1. `JsonParser` parses each line in the jsonl file to python dictionaries.
+2. `Filter` only allows `translation_delivered` events to pass through.
+3. `PerMinuteMovingAverageCalculator` is based on `MovingAverageCalculator`, it calculates a version of moving average based on the specification with the passed `window_size`.
+
+   `MovingAverageCalculator` does not produce values when there is no data, whereas `PerMinuteMovingAverageCalculator` produces values for minutes that do not have data.
+
+4. `JsonDumper` writes emitted moving average results to stdout.
+
+## Further direction
+
+- Accept input from stdin.
+- Accept processor chain configuration from command line to allow custom stream processing.
+- Option to ignore errors that happen during processing.
