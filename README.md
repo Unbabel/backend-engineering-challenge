@@ -1,5 +1,3 @@
-# Bakckend Engineering Challenge
-
 # Python version used for solution implementation
 Python3.7
 
@@ -10,16 +8,6 @@ The solution is provided as a cli application(unbabel-cli.py) for processing str
 python3.7 unbabel-cli.py --file input.json -window_size 10
 or
 python3.7 unbabel-cli.py -f input.json -w 10
-
-Welcome to our Engineering Challenge repository 🖖
-
-If you found this repository it probably means that you are participating in our recruitment process. Thank you for your time and energy. If that's not the case please take a look at our [openings](https://unbabel.com/careers/) and apply!
-
-Please fork this repo before you start working on the challenge, read it careful and take your time and think about the solution. Also, please fork this repository because we will evaluate the code on the fork.
-
-This is an opportunity for us both to work together and get to know each other in a more technical way. If have some doubt please open and issue and we'll reach out to help.
-
-Good luck!
 
 ## Challenge Scenario
 
