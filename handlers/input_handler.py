@@ -54,6 +54,11 @@ def parse_data(entry, dates):
                    "word_count": word_count}
   return dates
 
+def filter_size(w):
+  w = int(w)
+  if w < 1:
+    raise argparse.ArgumentTypeError("Minimum window size is 1")
+  return w
 
 def handle_input_args(argv):
   """
@@ -73,8 +78,8 @@ def handle_input_args(argv):
                                                                 filepath))
 
   parser.add_argument("-w", "--window_size", dest="window_size", required=False,
-                      help="Moving window size in minutes", default=10,
-                      type=int)
+                      help="Moving window size in minutes (should be >0)", default=10,
+                      type=filter_size)
 
   # todo: flag True to yield word count metrics
 
