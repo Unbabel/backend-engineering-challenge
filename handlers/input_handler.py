@@ -5,12 +5,19 @@ import os
 
 
 def check_and_read_file(parser, filepath):
+  """
+  Parses the data form the file, validating it first
+  :param parser: argument parser (python object)
+  :param filepath: string with path for file
+  :return:
+  """
+
   # check if file exists
   if not os.path.exists(filepath):
     print(f"The file {filepath} does not exist!")
     return False
 
-  # if the file exists, read it!
+  # read the file line by line and assert each line is json stirng
   dates = {}
   with open(filepath) as f:
     for entry in f:
@@ -18,12 +25,21 @@ def check_and_read_file(parser, filepath):
         entry = (json.loads(entry))
         dates = parse_data(entry, dates)
       except json.decoder.JSONDecodeError as execption:
+        # if not a json format, return error
         print(f"The file {filepath} contains invalid data: {entry}")
         return False
   return dates
 
 
 def parse_data(entry, dates):
+  """
+  Parses input data (json format) and stores it into a dict structure.
+  The dict key is the timestamp as y:m:d h:m:00" so each bucket corresponds
+  to a minute on the stream
+  :param entry: json format
+  :param dates: storage variable python dict
+  :return: the storage variable as dict
+  """
   date_ = datetime.datetime.strptime(entry["timestamp"], '%Y-%m-%d %H:%M:%S.%f')
   date = date_.replace(second=0, microsecond=0)
   word_count = entry["nr_words"]
@@ -40,6 +56,11 @@ def parse_data(entry, dates):
 
 
 def handle_input_args(argv):
+  """
+  hangles the input from the command line
+  :param argv:
+  :return:
+  """
   parser = argparse.ArgumentParser(add_help=False)
 
   parser.add_argument('-h', '--help', action='help', default=argparse.SUPPRESS,
@@ -55,13 +76,25 @@ def handle_input_args(argv):
                       help="Moving window size in minutes", default=10,
                       type=int)
 
+  # todo: flag True to yield word count metrics
+
+  # parser.add_argument("-wc", "--word_count", required=False, default=False,
+  #                     help="Word count flag allow to retrieve metrics such as "
+  #                          "total word count and word coutn per second",
+  #                     metavar="KEY")
+
+  # todo - not the most elegant way. the client name should be passed to the
+  # check and read file so data could be discarderd while reading and save
+  # memory and processing time
+  # parser.add_argument("-c", "--client_name", dest="client_name", required=False,
+  #                     default=None, help="Filter result data by client name",
+  #                     type=str)
+
   parser.add_argument("-o", "--output_file", dest="output_file_name",
                       required=False, default=False,
                       help="Filename to output data. If none, data will be "
                            "printed to the console", type=str)
 
-  # parser.add_argument("-c", "--client", dest="client", required=False,
-  #                     help="Will only calculate the average translation duration for the inputed client name",
-  #                     type=str)
 
   return parser.parse_args(argv[1:])
+
