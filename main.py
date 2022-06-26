@@ -44,13 +44,15 @@ for i in range(len(received_times)):
     
     # else, calculate difference (gap) between the two positions and add the missing numbers to the final list
     else:
-        # calculating gap
+        # calculating number of minutes missing between current date and the next date
         gap = received_times[i+1].date - received_times[i].date
         
+        # add missing entries to the date_list
         x = 1
-        while x < (gap.total_seconds()/60)-1:
+        while x < (round(gap.total_seconds()/60)):
             new_entry = Entry(str(received_times[i].date + timedelta(minutes=x)), duration = 0)
             date_list.append(new_entry)
             x+=1
+
 
 print(date_list) 
