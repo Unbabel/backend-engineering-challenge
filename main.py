@@ -5,7 +5,7 @@ import sys
 
 from Entry import Entry
 
-average_dict = []
+average_list = []
 received_times = []
 date_list = []
 
@@ -18,6 +18,31 @@ parser.add_argument('--window_size', type=int)
 args = parser.parse_args()
 filename = args.input_file
 window_size=args.window_size
+
+def fill_gaps(received_times, date_list):
+    
+    for i in range(len(received_times)):
+    
+        # Append the received time to the final list
+        date_list.append(received_times[i])
+        
+        # if we are on the last position, add one more minute and go to next position
+        if i == len(received_times) - 1:
+            new_entry = Entry(str(received_times[i].date + timedelta(minutes=1)), duration = 0)
+            date_list.append(new_entry)
+        
+        # else, calculate difference (gap) between the two positions and add the missing numbers to the final list
+        else:
+            # calculating number of minutes missing between current date and the next date
+            gap = received_times[i+1].date - received_times[i].date
+            
+            # add missing entries to the date_list
+            x = 1
+            while x < (round(gap.total_seconds()/60)):
+                new_entry = Entry(str(received_times[i].date + timedelta(minutes=x)), duration = 0)
+                date_list.append(new_entry)
+                x+=1
+
 
 try:
     input_file = open(filename, 'r')
@@ -32,27 +57,34 @@ with input_file:
         received_times.append(Entry(date=row['timestamp'], duration=row['duration'])) # append each entry from json into the minutes dict before filling in the "gaps"
 
 # Fill in the "missing" minutes
-for i in range(len(received_times)):
+fill_gaps(received_times, date_list)
+
+for date in date_list:
+    if date_list.index(date) == 0:
+        average_list.append({
+        "date": str(date.date.strftime("%Y-%m-%d %H:%M:%S")),
+        "average_delivery_time": 0
+        })
+        continue
     
-    # Append the received time to the final list
-    date_list.append(received_times[i])
+    i = date_list.index(date) - window_size
+    entries = 0
+    total_sum = 0.0
+    average = 0.0
     
-    # if we are on the last position, add one more minute and go to next position
-    if i == len(received_times) - 1:
-        new_entry = Entry(str(received_times[i].date + timedelta(minutes=1)), duration = 0)
-        date_list.append(new_entry)
-    
-    # else, calculate difference (gap) between the two positions and add the missing numbers to the final list
-    else:
-        # calculating number of minutes missing between current date and the next date
-        gap = received_times[i+1].date - received_times[i].date
-        
-        # add missing entries to the date_list
-        x = 1
-        while x < (round(gap.total_seconds()/60)):
-            new_entry = Entry(str(received_times[i].date + timedelta(minutes=x)), duration = 0)
-            date_list.append(new_entry)
-            x+=1
+    while i < date_list.index(date):
+        if i >= 0:
+            if date_list[i].duration != 0:
+                entries += 1
+                total_sum += date_list[i].duration
+        i+=1
+
+    average = total_sum/entries if entries != 0 else 0
+    average_list.append({
+        "date": str(date.date.strftime("%Y-%m-%d %H:%M:%S")),
+        "average_delivery_time": average
+    })
+
+print(average_list)
 
 
-print(date_list) 
