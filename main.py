@@ -1,5 +1,8 @@
-from src.reader import read_json
+from src.reader import read
+from src.processor import process
 import argparse
+
+
 # Press the green button in the gutter to run the script.
 # For each iteration I'll have the current timestamp - window size
 # every minute will compare:
@@ -10,11 +13,20 @@ import argparse
 # 4. create output
 # 4. unit tests
 
-def processEvents(df):
-    pass
+def read_arguments():
+    parser = argparse.ArgumentParser(description='Events Aggregated per minute')
+    parser.add_argument('--input_file', required=True, type=str, help='Input file')
+    parser.add_argument('--window_size', required=True, type=int, help='Window Size')
+    args = parser.parse_args()
+    return args
 
 
 if __name__ == '__main__':
-    df = read_json('files/events.json', )
-    processEvents(df)
-
+    # args = read_arguments()
+    args = {
+        "input_file": 'files/events.json',
+        "window_size": 10
+    }
+    df = read(args['input_file'])
+    out_frame = process(df, args['window_size'])
+    # write(out_frame)
