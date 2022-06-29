@@ -1,4 +1,5 @@
 from datetime import datetime
+import pandas as pd
 
 date_format = '%Y-%m-%d %H:%M:%S.%f'
 
@@ -8,9 +9,11 @@ def _calculateMovingAvg(events, window_size):
     start_tms = res[0]['timestamp']
     running_tms = res[0]['timestamp']
     end_tms = res[len(events) - 1]['timestamp']
-    while running_tms < end_tms:
-
-
+    left_side = 0
+    right_side = 0
+    dfRangeTime = pd.date_range(start_tms, end_tms, freq="1min")
+    while left_side < len(dfRangeTime):
+        while(start_tms + pd.to_timedelta())
 
 def process(events, window_size):
     _calculateMovingAvg(events, window_size)
