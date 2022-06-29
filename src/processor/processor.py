@@ -17,7 +17,7 @@ def __calculate_moving_average(df: pd.DataFrame, window_size: int) -> pd.DataFra
     df2 = df[['dates', 'duration']]
     start_time = df2['dates'].dt.round('min').min()
     end_time = df2['dates'].dt.round('min').max()
-    date_ranges = __generate_dates(end_time, start_time)
+    date_ranges = _generate_dates(end_time, start_time)
     all_df = pd.concat([df2, date_ranges])
     all_df = all_df.sort_values('dates')
     moving_average_df = all_df.rolling(str(window_size) + 'min', on='dates').mean().resample('1min', on='dates').first()
@@ -25,7 +25,7 @@ def __calculate_moving_average(df: pd.DataFrame, window_size: int) -> pd.DataFra
     return moving_average_df
 
 
-def __generate_dates(end_time, start_time):
+def _generate_dates(end_time, start_time):
     return pd.DataFrame(pd.date_range(start=start_time - datetime.timedelta(minutes=1),
                                       end=end_time + datetime.timedelta(minutes=1), freq='min'),
                         columns=['dates'])
