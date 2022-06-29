@@ -14,19 +14,13 @@ def process(df, window_size) -> pd.DataFrame:
 # return a master dataframe of the output
 def _calculateAvg(df, window_size) -> pd.DataFrame:
     df['dates'] = df['timestamp'].astype('datetime64[s]')
+    df['dates'] = pd.to_datetime(df['dates'], format='%Y-%m-%d %H:%M:%S.%f')
     df2 = df[['dates', 'duration']]
     start_time = df2['dates'].dt.round('min').min()
     dummy_df = pd.DataFrame(pd.date_range(start=start_time,
                                           end=start_time + datetime.timedelta(minutes=window_size), freq='min'),
                             columns=['dates'])
-    dummy_df['duration'] = 0
+    all_df = pd.concat([df2, dummy_df])
+    all_df = all_df.sort_values('dates')
+    print(all_df.rolling(str(window_size) + 'min', on='dates').mean())
     selected_records = df2[df2['dates'].between(start_time, start_time + datetime.timedelta(minutes=window_size))]
-    merged_df = pd.concat([dummy_df, selected_records])
-    merged_df.resample
-#
-#   2018-12-26 18:12:00, 0.0
-#   2018-12-26 18:12:07, 20.0
-#   2018-12-26 18:13:00, 0.0
-#   2018-12-26 18:14:00, 0.0
-#   2018-12-26 18:14:10, 20.0
-#   2018-12-26 18:15:00, 0.0
