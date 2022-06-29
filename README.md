@@ -18,7 +18,7 @@ I have done some research of how to validate them and decide what to do about th
 Then I divided in **reader, processor and writer** (like a Batch Job).
 
 * **Reader** is responsible just for reading and sanitize the input stream
-* **Processor** is responsible to calculate the average of time delivered
+* **Processor** is responsible to calculate the moving average of the duration
 * **Writer** produces the output file
 
 Don't hesitate on send a DM for changes! 
@@ -26,9 +26,9 @@ Thanks,
 Have a nice day! 
 
 Next TODOS:
-* Write Unit Tests.
 * Write Performance Tests.
-* Write Integration Tests. 
+* Write Integration Tests.
+* Make a faster output file 
 
 
 # Backend Engineering Challenge
