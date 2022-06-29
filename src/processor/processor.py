@@ -3,7 +3,7 @@ import datetime
 import pandas as pd
 
 
-def process(df, window_size) -> pd.DataFrame:
+def process(df: pd.DataFrame, window_size: int) -> pd.DataFrame:
     return __calculate_moving_average(df, window_size)
 
 

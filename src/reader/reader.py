@@ -10,7 +10,7 @@ int_validation = [CustomElementValidation(lambda i: _check_int(i), 'is not integ
 null_validation = [CustomElementValidation(lambda d: d is not None, 'this field cannot be null')]
 
 
-def do_validation(df) -> pd.DataFrame:
+def do_validation(df: pd.DataFrame) -> pd.DataFrame:
     schema = pandas_schema.Schema([
         Column('timestamp', null_validation),
         Column('translation_id', null_validation),
@@ -30,7 +30,7 @@ def do_validation(df) -> pd.DataFrame:
     return data_clean
 
 
-def read(input_file) -> pd.DataFrame:
+def read(input_file: str) -> pd.DataFrame:
     df = pd.read_json(input_file)
     data_clean = do_validation(df)
     print(data_clean)
