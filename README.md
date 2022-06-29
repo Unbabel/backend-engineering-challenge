@@ -1,5 +1,37 @@
-# Backend Engineering Challenge
+# SOLUTION
+* First I want to clarify that I'm not a python developer, but I have experience in batch processing with spring and spark
+* Second it was really fun to learn new tools in a short time period
 
+### Requirement: Python3
+
+```
+  main.py --input_file <input_file> --window_size <window_size>
+```
+
+If you don't have you can take a look to the **HELP.MD** where you can find installation guidance
+
+My initial solution was to work with a **Spring Batch Processing**, but I decided to take other approach it became difficult to aggregate big chunks of data
+
+So, I decided to go with **Python and Pandas**, I took some courses to learn and understand their use case. So a data frame would fit perfectly as my entry point for reading and storing the json data
+I have done some research of how to validate them and decide what to do about the "Bad Records" because the data can be corrupted
+
+Then I divided in **reader, processor and writer** (like a Batch Job).
+
+* **Reader** is responsible just for reading and sanitize the input stream
+* **Processor** is responsible to calculate the average of time delivered
+* **Writer** produces the output file
+
+Don't hesitate on send a DM for changes! 
+Thanks,
+Have a nice day! 
+
+Next TODOS:
+* Write Unit Tests.
+* Write Performance Tests.
+* Write Integration Tests. 
+
+
+# Backend Engineering Challenge
 
 Welcome to our Engineering Challenge repository 🖖
 
