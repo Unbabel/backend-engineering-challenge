@@ -24,5 +24,4 @@ def _calculateAvg(df, window_size) -> pd.DataFrame:
     all_df = pd.concat([df2, dummy_df])
     all_df = all_df.sort_values('dates')
     moving_average_df = all_df.rolling(str(window_size) + 'min', on='dates').mean().resample('1min', on='dates').first()
-    moving_average_df['dates'] = moving_average_df['dates'].astype('datetime64[s]')
     return moving_average_df
