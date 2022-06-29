@@ -189,4 +189,5 @@ cython_debug/
 *.code-workspace
 
 output.json
+input.json
 # End of https://www.toptal.com/developers/gitignore/api/python,visualstudiocode

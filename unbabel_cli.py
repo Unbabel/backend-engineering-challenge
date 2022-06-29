@@ -46,8 +46,10 @@ def fill_gaps(received_times, date_list):
 
 # Helper function to format the entry date to the desired output date format
 def format_date(entry):
-    return str(entry.date.strftime("%Y-%m-%d %H:%M:%S"))
+    d = entry.date.replace(second=0) # set the seconds to zero
+    return d.strftime("%Y-%m-%d %H:%M:%S") # return the date with the desired format
 
+# Write the list into the output file
 def write_results(average_list):
     with open('output.json', 'w') as f:
         json.dump(average_list, f)
@@ -88,7 +90,7 @@ for date in date_list:
     # Variable to sum the duration of the entries
     total_sum = 0.0
     # Final average for each date
-    average = 0
+    average = 0.0
     
     # While the counter doesn't reach the current date:
     while i < date_list.index(date):
@@ -98,17 +100,13 @@ for date in date_list:
                 entries += 1
                 total_sum += date_list[i].duration
         i+=1
-
     # If there are no entries, average will automatically equal zero to avoid trying to divide 0 by 0 
     average = total_sum/entries if entries != 0 else 0
     
     # Append the result to the averages list
     average_list.append({
         "date": format_date(date),
-        "average_delivery_time": average
+        "average_delivery_time": average if average % 1 != 0 else int(average) # Remove decimal places if it is equal to zero
     })
 
 write_results(average_list)
-
-
-
