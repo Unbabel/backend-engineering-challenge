@@ -17,10 +17,12 @@ def _calculateAvg(df, window_size) -> pd.DataFrame:
     df['dates'] = pd.to_datetime(df['dates'], format='%Y-%m-%d %H:%M:%S.%f')
     df2 = df[['dates', 'duration']]
     start_time = df2['dates'].dt.round('min').min()
-    dummy_df = pd.DataFrame(pd.date_range(start=start_time,
-                                          end=start_time + datetime.timedelta(minutes=window_size), freq='min'),
+    end_time = df2['dates'].dt.round('min').max()
+    dummy_df = pd.DataFrame(pd.date_range(start=start_time - datetime.timedelta(minutes=1),
+                                          end=end_time + datetime.timedelta(minutes=1), freq='min'),
                             columns=['dates'])
     all_df = pd.concat([df2, dummy_df])
     all_df = all_df.sort_values('dates')
-    print(all_df.rolling(str(window_size) + 'min', on='dates').mean())
-    selected_records = df2[df2['dates'].between(start_time, start_time + datetime.timedelta(minutes=window_size))]
+    moving_average_df = all_df.rolling(str(window_size) + 'min', on='dates').mean().resample('1min', on='dates').first()
+    moving_average_df['dates'] = moving_average_df['dates'].astype('datetime64[s]')
+    return moving_average_df
