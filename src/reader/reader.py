@@ -26,13 +26,15 @@ def do_validation(df) -> pd.DataFrame:
 
     errors_index_rows = [e.row for e in errors]
     data_clean = df.drop(index=errors_index_rows)
-    #pd.DataFrame({'col': errors}).to_csv('files/errors.txt')
+    # pd.DataFrame({'col': errors}).to_csv('files/errors.txt')
     return data_clean
 
 
 def read(input_file) -> pd.DataFrame:
     df = pd.read_json(input_file)
-    return do_validation(df)
+    data_clean = do_validation(df)
+    print(data_clean)
+    return data_clean
 
 
 def _check_decimal(dec) -> bool:

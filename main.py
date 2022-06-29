@@ -1,5 +1,6 @@
-from src.reader import read
-from src.processor import process
+from src.reader.reader import read
+from src.processor.processor import process
+from src.writer.writer import write
 import argparse
 
 
@@ -29,4 +30,4 @@ if __name__ == '__main__':
     }
     df = read(args['input_file'])
     out_frame = process(df, args['window_size'])
-    # write(out_frame)
+    write(out_frame)
