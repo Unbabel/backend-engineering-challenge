@@ -26,7 +26,7 @@ def do_validation(df: pd.DataFrame) -> pd.DataFrame:
 
     errors_index_rows = [e.row for e in errors]
     data_clean = df.drop(index=errors_index_rows)
-    # pd.DataFrame({'col': errors}).to_csv('files/errors.txt')
+    pd.DataFrame({'col': errors}).to_json('files/errors.json')
     return data_clean
 
 
