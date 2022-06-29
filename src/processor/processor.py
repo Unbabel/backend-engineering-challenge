@@ -21,6 +21,7 @@ def __calculate_moving_average(df: pd.DataFrame, window_size: int) -> pd.DataFra
     all_df = pd.concat([df2, date_ranges])
     all_df = all_df.sort_values('dates')
     moving_average_df = all_df.rolling(str(window_size) + 'min', on='dates').mean().resample('1min', on='dates').first()
+    moving_average_df['duration'] = moving_average_df['duration'].fillna(0)
     return moving_average_df
 
 
