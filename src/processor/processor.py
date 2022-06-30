@@ -1,7 +1,16 @@
 import src.util.util as util
+from src.util.util import get_rounded_off_datetime, get_datetime_from_string
+
+
+def _convert_dates(events):
+    for event in events:
+        event['timestamp'] = get_datetime_from_string(event['timestamp'])
+        event['datetime'] = get_rounded_off_datetime(event['timestamp'])
+    return events
 
 
 def process(events, window_size):
+    events = _convert_dates(events)
     events = iter(events)
     event = next(events)
     moving_average = []
