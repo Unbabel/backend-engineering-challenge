@@ -7,10 +7,10 @@ def process(df: pd.DataFrame, window_size: int) -> pd.DataFrame:
     return __calculate_moving_average(df, window_size)
 
 
-# For every window of x minutes will create a dataframe of [dates,duration]
-# Will filter the selected records for corresponding window [dates,duration]
-# calculates the moving average with rolling function [dates, avg]
-# return a master dataframe of the output
+# Generates a dataframe of a date range from the start time to the end time of the input per minute
+# It concat the dataframe of data range and input
+# calculates the moving average with rolling function and resamples every minute to have a 00 seconds output
+# return a moving average to main to continue with the writing process
 def __calculate_moving_average(df: pd.DataFrame, window_size: int) -> pd.DataFrame:
     df['dates'] = df['timestamp'].astype('datetime64[s]')
     df['dates'] = pd.to_datetime(df['dates'], format='%Y-%m-%d %H:%M:%S.%f')
