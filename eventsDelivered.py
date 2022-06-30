@@ -1,7 +1,7 @@
 from src.reader.reader import read
 from src.processor.processor import process
+from src.writer.writer import write
 import argparse
-
 
 
 def read_arguments():
@@ -19,5 +19,5 @@ if __name__ == '__main__':
         "window_size": 10
     }
     events = read(args['input_file'])
-    out_frame = process(events, args['window_size'])
-    # write(out_frame)
+    moving_average_list = process(events, args['window_size'])
+    write(moving_average_list, 'files/output.json')
