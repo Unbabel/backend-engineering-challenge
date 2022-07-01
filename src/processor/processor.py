@@ -21,7 +21,8 @@ def __calculate_moving_average(df: pd.DataFrame, window_size: int) -> pd.DataFra
     all_df = pd.concat([df2, date_ranges])
     all_df = all_df.sort_values('dates')
     moving_average_df = all_df.rolling(str(window_size) + 'min', on='dates').mean()
-    moving_average_df = moving_average_df[moving_average_df['dates'].isin(date_ranges['dates'])].fillna(0)
+    moving_average_df = moving_average_df[moving_average_df['dates'].isin(date_ranges['dates'])].fillna(
+        0).drop_duplicates()
     return moving_average_df
 
 
