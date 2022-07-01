@@ -33,7 +33,6 @@ def do_validation(df: pd.DataFrame) -> pd.DataFrame:
 def read(input_file: str) -> pd.DataFrame:
     df = pd.read_json(input_file)
     data_clean = do_validation(df)
-    print(data_clean)
     return data_clean
 
 
