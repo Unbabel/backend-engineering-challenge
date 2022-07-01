@@ -10,12 +10,8 @@ class TestCalculateMovingAvg(unittest.TestCase):
     def test_moving_avg_do_not_overlap(self):
         expected_output = [
             {
-                "dates": "2018-12-26 18:10:00",
-                "duration": 0
-            },
-            {
                 "dates": "2018-12-26 18:11:00",
-                "duration": 20.0
+                "duration": 0
             },
             {
                 "dates": "2018-12-26 18:12:00",
@@ -62,8 +58,7 @@ class TestCalculateMovingAvg(unittest.TestCase):
 
     def test_moving_avg_with_example_readme(self):
         expected_output = [
-            {"dates": "2018-12-26 18:10:00", "duration": 0},
-            {"dates": "2018-12-26 18:11:00", "duration": 20.0},
+            {"dates": "2018-12-26 18:11:00", "duration": 0.0},
             {"dates": "2018-12-26 18:12:00", "duration": 20.0},
             {"dates": "2018-12-26 18:13:00", "duration": 20.0},
             {"dates": "2018-12-26 18:14:00", "duration": 20.0},
