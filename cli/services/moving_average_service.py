@@ -3,14 +3,14 @@ import pandas as pd
 class MovingAverageService:
     """Class to create movie clips"""
     
-    def calc_index_timestamps(start_index: int, window_size: int):
+    def calc_index_timestamps(current_index: int, window_size: int):
         """Calculates the start and end index based on the window size"""
 
         # case when start is smaller than the window size and would overflow
-        if start_index-window_size < 0:
-            return start_index, 0
+        if current_index-window_size <= 0:
+            return current_index, 0
 
-        return start_index, start_index-window_size
+        return current_index, current_index-window_size
 
 
     def simple_moving_average(df: pd.DataFrame, window: int) -> pd.DataFrame:

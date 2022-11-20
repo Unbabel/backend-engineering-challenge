@@ -4,7 +4,7 @@ class ProcessDataService:
 
     @staticmethod
     def group_data_by_freq(df: pd.DataFrame, freq: str = '1min') -> pd.DataFrame:
-        """Pre-processes the dataframe to have one bucket based on the frequency. Default is 1 minute"""
+        """Pre-processes the dataframe to have buckets based on the frequency. Default is 1 minute"""
 
         df['timestamp'] = pd.to_datetime(df['timestamp'])
         df['timestamp'] = pd.Series(pd.to_datetime(df['timestamp'])).dt.round('T')

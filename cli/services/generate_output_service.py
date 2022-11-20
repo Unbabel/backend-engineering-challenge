@@ -3,7 +3,7 @@ import pandas as pd
 class GenerateOutputService:
 
     @staticmethod
-    def create_json_file(df: pd.DataFrame, output_file: str ='./output.json', orient: str ='records'):
+    def create_json_file(df: pd.DataFrame, output_file: str ='../data/outputs/output.json', orient: str ='records'):
         """Creates a json output"""
 
         df.rename(columns={'timestamp': 'date',
