@@ -1,0 +1,21 @@
+# .github/workflows/ci.yml
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  test:
+    name: Run tests & display coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install everything, run the tests, produce the .coverage file
+        run: pip install -r requirements.txt
+
+      - name: Test
+        run: cd cli; python -m pytest tests
