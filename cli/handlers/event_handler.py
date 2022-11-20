@@ -1,20 +1,22 @@
 import pandas as pd
 from typing import Callable
 
+from schemas.translation_event_schema import TranslationEventSchema
 class EventHandler:
     """Handles events from all formats"""
 
     def convert_json_to_df(filename: str) -> pd.DataFrame:
         """Converts json file to a pandas Dataframe"""
 
-        return pd.read_json(filename)
+        try:
+            df = pd.read_json(filename)
+        except:
+            raise ValueError('Could not convert file into Dataframe')
 
+        if df.columns.values.tolist() != TranslationEventSchema.values:
+            raise ValueError('Dataframe does not have the right schema')
 
-    def convert_log_to_df(filename: str) -> pd.DataFrame:
-        """Converts log file to a pandas Dataframe"""
-
-        return 'TODO'
-
+        return df
 
     def convert_file_to_df(filename: str) -> Callable:
         """Receives the filename and redirected to the right function to parse the file """
@@ -26,9 +28,3 @@ class EventHandler:
             raise Exception('Sorry, this file format is not suported yet')
 
         raise Exception('Sorry, file format not suported')
-
-    def handle_event(format: str):
-        if format == 'file':
-            return ''
-        else:
-            raise Exception('Sorry, format not suported')

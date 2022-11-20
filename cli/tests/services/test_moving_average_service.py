@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 
-from cli.services.moving_average_service import MovingAverageService
+from services.moving_average_service import MovingAverageService
 
 def test_simple_moving_average_1():
     """Should return a dataframe with a new column ['sma'] with the simple moving

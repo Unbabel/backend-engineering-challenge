@@ -6,4 +6,5 @@ simple command line application that parses a stream of events and produces an a
 `python unbabel_cli.py --input_file ../data/inputs/input.json  --window_size 10`
 
 ### Run tests
-`python -m pytest cli/tests/`
+`cd cli`
+`python -m pytest tests`
