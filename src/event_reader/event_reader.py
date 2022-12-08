@@ -1,8 +1,16 @@
 from typing import List
 import ijson
-from models.event import Event
-from util.utils import timestamp_to_datetime
+from src.models.event import Event
 import pydantic
+
+"""
+    Function that from a json stream creates a list of Event objects
+
+    params:
+        file_name: file name
+     output:
+        event_list: List of Event objects
+"""
 
 
 def read_events(file_name: str) -> List[Event]:

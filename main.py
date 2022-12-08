@@ -1,5 +1,5 @@
 import argparse
-from event_processor.event_processor import event_processor
+from src.event_processor.event_processor import event_processor
 
 
 def parse_args():
