@@ -1,5 +1,5 @@
 import argparse
-from src.event_processor.event_processor import event_processor
+from src.event_processor.event_processor import process_events
 
 
 def parse_args():
@@ -16,7 +16,7 @@ def parse_args():
 
 def main():
     args = parse_args()
-    event_processor(args.input_file, args.window_size)
+    process_events(args.input_file, args.window_size)
 
 
 if __name__ == '__main__':
