@@ -1,5 +1,7 @@
 from pydantic.dataclasses import dataclass
 
+# DataClass representing the input event, based on Pydantic dataclasses to help with fields validation
+
 
 @dataclass
 class Event():
