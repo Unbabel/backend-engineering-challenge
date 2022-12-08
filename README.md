@@ -19,6 +19,10 @@ To launch the application, open a new terminal and use the following command
 
 Where NAME_FILE is a string representing the input file to use. For experimental reasons, a file named "input.json" is provided to use with the app inside "example_files" folder.
 
+# EVENTUAL IMPROVEMENTS
+
+In the current state, the application is not really suited for managing large JSON input files. A possibile solution to this could be to use libraries such as pandas to manage data in a different way, but the optimal solution should be to associate an Elasticsearch instance to the application, in which the input entries should be stored and then queried to retrieve the moving average
+
 # Backend Engineering Challenge
 
 Welcome to our Engineering Challenge repository 🖖
