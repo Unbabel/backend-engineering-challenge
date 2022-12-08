@@ -22,6 +22,6 @@ def get_ending_window_datetime(start_date: datetime, window_size: int) -> dateti
 
 
 def write_to_file(period_date: datetime, average: float):
-    with open("output_files" + datetime.now().strftime("%m-%d-%YT%H:%M:%S") + ".json", "a+") as file:
+    with open("output_files/" + datetime.now().strftime("%m-%d-%YT%H:%M:%S") + ".txt", "a+") as file:
         file.write(json.dumps(OutputEvent(date=period_date.strftime(STRING_FORMAT),
-                   average_delivery_time=average).__dict__))
+                   average_delivery_time=average).__dict__)+"\n")
