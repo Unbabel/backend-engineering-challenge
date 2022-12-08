@@ -1,10 +1,2 @@
-from datetime import datetime
-from models.event import Event
-
-TIMESTAMP_FORMAT = '%Y-%m-%d %H:%M:%S.%f'
-STRING_FORMAT =
-
-
-def timestamp_to_datetime(event, time_format=TIMESTAMP_FORMAT) -> Event:
-    event["timestamp"] = datetime.strptime(event["timestamp"], time_format)
-    return event
+def sort_by_datetime(event_list):
+    event_list.sort(reverse=True, key=lambda x: x.timestamp)

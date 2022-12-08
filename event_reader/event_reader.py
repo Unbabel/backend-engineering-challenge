@@ -10,7 +10,6 @@ def read_events(file_name: str) -> List[Event]:
     event_stream = ijson.items(open("example_files/" + file_name), "item")
     for item in event_stream:
         try:
-            new_event = timestamp_to_datetime(item)
             new_event = Event(**item)
         except pydantic.ValidationError as err:
             print(err)
