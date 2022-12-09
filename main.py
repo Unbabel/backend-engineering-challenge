@@ -17,6 +17,7 @@ def parse_args():
 def main():
     args = parse_args()
     process_events(args.input_file, args.window_size)
+    print("Operation Completed!")
 
 
 if __name__ == '__main__':

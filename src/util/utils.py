@@ -1,27 +1,23 @@
-from datetime import datetime, timedelta
-from typing import List
-
-from src.models.event import Event
-from src.models.output_event import OutputEvent
-import json
+from datetime import datetime
 
 STRING_FORMAT = "%y-%m-%d %H:%M:%S"
+DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
 
 
-def sort_by_datetime(event_list):
-    event_list.sort(key=lambda x: x.timestamp)
-
-
-def get_starting_window_datetime(events_list: List[Event]) -> datetime:
+def get_starting_window_datetime(events_list) -> datetime:
     if events_list:
-        return events_list[0].timestamp.replace(second=0, microsecond=0)
+        return get_datetime_from_string(next(events_list)["timestamp"]).replace(second=0, microsecond=0)
 
 
-def get_ending_window_datetime(start_date: datetime, window_size: int) -> datetime:
-    return start_date + timedelta(minutes=window_size)
+def get_datetime_from_string(date: str) -> datetime:
+    return datetime.strptime(date, DATETIME_FORMAT)
+
+
+def get_string_from_datetime(date: datetime) -> str:
+    return datetime.strftime(date, STRING_FORMAT)
 
 
 def write_to_file(period_date: datetime, average: float):
-    with open("output_files/" + datetime.now().strftime("%m-%d-%YT%H:%M:%S") + ".txt", "a+") as file:
-        file.write(json.dumps(OutputEvent(date=period_date.strftime(STRING_FORMAT),
-                   average_delivery_time=average).__dict__)+"\n")
+    with open("output_files/output.json", "a+") as file:
+        file.write("{{\"date\": \"{0}\", \"average_delivery_time\":{1}}},\n".format(
+            get_string_from_datetime(period_date), average))
