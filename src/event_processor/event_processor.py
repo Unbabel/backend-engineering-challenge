@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from src.event_reader.event_reader import read_events
-from src.util.utils import get_starting_window_datetime, get_datetime_from_string, write_to_file
+from src.util.utils import get_starting_window_datetime, get_datetime_from_string, write_to_file, get_ending_date_window_datetime
 
 """
     Function that takes a Json file and a window size as input and produces
@@ -18,7 +18,10 @@ from src.util.utils import get_starting_window_datetime, get_datetime_from_strin
 def process_events(file_name: str, window_size: int):
     events_list = read_events(file_name=file_name)
     start_date = get_starting_window_datetime(events_list)
-    _calculate_moving_average(file_name, window_size, start_date)
+    end_date = get_ending_date_window_datetime(events_list)
+    print(end_date)
+    time_delta = (end_date - start_date).seconds / 60
+    _calculate_moving_average(file_name, window_size, time_delta, start_date)
 
 
 """
@@ -32,8 +35,8 @@ def process_events(file_name: str, window_size: int):
 """
 
 
-def _calculate_moving_average(file_name: str, window_size: int, start_date: datetime):
-    for minute in range(0, window_size + 1):
+def _calculate_moving_average(file_name: str, window_size: int, time_delta: float, start_date: datetime):
+    for minute in range(0,  int(time_delta) + 1):
         event_list = read_events(file_name=file_name)
         counter = 0
         total_duration = 0
