@@ -11,6 +11,7 @@ import ijson
 
 
 def read_events(file_name: str):
-    event_stream = ijson.items(open("example_files/" + file_name), "item")
+    event_stream = ijson.items(
+        open("example_files/" + file_name, "rb"), "item")
     events = (event for event in event_stream)
     return events

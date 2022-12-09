@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-STRING_FORMAT = "%y-%m-%d %H:%M:%S"
+STRING_FORMAT = "%Y-%m-%d %H:%M:%S"
 DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
 
 
@@ -21,9 +21,3 @@ def get_datetime_from_string(date: str) -> datetime:
 
 def get_string_from_datetime(date: datetime) -> str:
     return datetime.strftime(date, STRING_FORMAT)
-
-
-def write_to_file(period_date: datetime, average: float):
-    with open("output_files/output.txt", "a+") as file:
-        file.write("{{\"date\": \"{0}\", \"average_delivery_time\":{1}}},\n".format(
-            get_string_from_datetime(period_date), average))

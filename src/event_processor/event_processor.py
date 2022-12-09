@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from src.event_reader.event_reader import read_events
-from src.util.utils import get_starting_window_datetime, get_datetime_from_string, write_to_file, get_ending_date_window_datetime
+from src.util.utils import get_starting_window_datetime, get_datetime_from_string, get_ending_date_window_datetime
+from src.file_writer.file_writer import write_to_file
 
 """
     Function that takes a Json file and a window size as input and produces
