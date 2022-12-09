@@ -21,7 +21,7 @@ Where NAME_FILE is a string representing the input file to use. For experimental
 
 # EVENTUAL IMPROVEMENTS
 
-In the current state, the application is not really suited for managing large JSON input files. A possibile solution to this could be to use libraries such as pandas to manage data in a different way, but the optimal solution should be to associate an Elasticsearch instance to the application, in which the input entries should be stored and then queried to retrieve the moving average
+In the current state, the application is not really suited for managing large JSON input files. Right now, the application avoids the majority of the memory usage by not storing any event in memory but using generators and different I/O operations to achieve the final result. in presence of large files stored on hard drives this will be a memory safe approach put possibily very slow. A possibile solution to this could be to use libraries such as pandas to manage data in a different way, but the optimal solution should be to associate an Elasticsearch instance to the application, in which the input entries should be stored and then queried to retrieve the moving average
 
 # Backend Engineering Challenge
 
