@@ -8,11 +8,8 @@ PROGRAM_NAME="unbabel_cli"
 # Define the location where the program will be installed
 INSTALL_DIRECTORY="/usr/local/bin"
 
-# Remove go mod if existing
-rm go.mod || true
-
-# Initialize Go module
-go mod init "$PROGRAM_NAME"
+# Initialize Go module if not exisitant
+go mod init "$PROGRAM_NAME" || true
 
 # Build the Go program
 go build -o "$PROGRAM_NAME"
