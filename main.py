@@ -15,15 +15,28 @@ def calculate_moving_average(input_file, window_size):
         event_queue.append((timestamp, duration))
         while event_queue and timestamp - event_queue[0][0] > timedelta(minutes=window_size):
             event_queue.pop(0)
-            
-        if event_queue:
-            moving_average = sum(duration for _, duration in event_queue) / len(event_queue)
-            print(moving_average)
-            average_delivery_times.append({'date': timestamp.strftime('%Y-%m-%d %H:%M:%S'), 'average_delivery_time': moving_average})
+        
+        # Calculate moving averages for each minute within the current time window
+        current_time = timestamp
+        window_start_time = current_time - timedelta(minutes=window_size)
 
-    # save_to_file(average_time=average_delivery_times)
+        while event_queue and event_queue[0][0] < current_time:
+            moving_average = round(sum(duration for _, duration in event_queue) / len(event_queue), 2)
+            average_delivery_times.append({"date": current_time.strftime('%Y-%m-%d %H:%M:%S'), "average_delivery_time": moving_average})
+
+            # Move the time window to the next minute
+            current_time -= timedelta(minutes=1)
+        # print(average_delivery_times)
+        # if event_queue:
+        #     moving_average = sum(duration for _, duration in event_queue) / len(event_queue)
+        #     print(moving_average)
+        #     average_delivery_times.append({'date': timestamp.strftime('%Y-%m-%d %H:%M:%S'), 'average_delivery_time': moving_average})
+
+    save_to_file(average_time=average_delivery_times)
 
 def save_to_file(average_time):
+    
+    average_time.sort(key=lambda x: x["date"])
     for mv in average_time:
         print(mv)
 
