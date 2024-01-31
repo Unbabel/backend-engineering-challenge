@@ -1,8 +1,9 @@
+from typing import List, Dict, Union
 import argparse
 import json
 from datetime import datetime, timedelta
 
-def read_events_from_file(input_file):
+def read_events_from_file(input_file: str) -> List[Dict]:
     """
     Read events from a JSON file and return a list of events.
 
@@ -18,7 +19,7 @@ def read_events_from_file(input_file):
             events = [json.loads(line) for line in file]
     return events
 
-def remove_old_events(event_queue, timestamp, window_size):
+def remove_old_events(event_queue: List[tuple], timestamp: datetime, window_size: int) -> None:
     """
     Remove events outside the current time window from the event queue.
 
@@ -30,7 +31,7 @@ def remove_old_events(event_queue, timestamp, window_size):
     while event_queue and timestamp - event_queue[0][0] > timedelta(minutes=window_size):
         event_queue.pop(0)
 
-def filter_events_within_window(event_queue, window_start_time, current_time):
+def filter_events_within_window(event_queue: List[tuple], window_start_time: datetime, current_time: datetime) -> List[tuple]:
     """
     Filter events within the current time window.
 
@@ -44,7 +45,7 @@ def filter_events_within_window(event_queue, window_start_time, current_time):
     """
     return [(time, duration) for time, duration in event_queue if window_start_time <= time <= current_time]
 
-def calculate_moving_average(input_file, window_size):
+def calculate_moving_average(input_file: str, window_size: int) -> None:
     """
     Calculate moving average delivery time.
 
@@ -52,8 +53,8 @@ def calculate_moving_average(input_file, window_size):
         input_file (str): Path to the input JSON file.
         window_size (int): Size of the time window for moving average.
     """
-    event_queue = []
-    average_delivery_times = []
+    event_queue: List[tuple] = []
+    average_delivery_times: List[Dict[str, Union[str, float]]] = []
 
     events = read_events_from_file(input_file)
 
@@ -82,7 +83,7 @@ def calculate_moving_average(input_file, window_size):
 
     save_to_file(average_delivery_times)
 
-def save_to_file(average_time):
+def save_to_file(average_time: List[Dict[str, Union[str, float]]]) -> None:
     """
     Save moving average delivery times to a file and print them.
 
