@@ -8,12 +8,13 @@ def calculate_moving_average(input_file, window_size):
     if input_file:
         with open(input_file, 'r') as file:
             events = [json.loads(line) for line in file]
-        # print(events)
+        print(events)
     for event in events:
         timestamp = datetime.strptime(event['timestamp'], '%Y-%m-%d %H:%M:%S.%f')
         duration =  event['duration']
         event_queue.append((timestamp, duration))
         while event_queue and timestamp - event_queue[0][0] > timedelta(minutes=window_size):
+            window_start_time = event_queue[0][0] + timedelta(minutes=window_size)
             event_queue.pop(0)
         # print(f"After while loop - event_queue: {event_queue}")
         # Calculate moving averages for each minute within the current time window
@@ -23,8 +24,9 @@ def calculate_moving_average(input_file, window_size):
         while event_queue and event_queue[0][0] < current_time:
             # Filter events within the current time window [current_minute - window_size, current_minute]
             events_within_window = [(time, duration) for time, duration in event_queue if window_start_time <= time <= current_time]
-            print('them evts', events_within_window)
             # Calculate moving average only if there are events within the window
+            # print('them evts', len(events_within_window))
+            
             if events_within_window:
                 moving_average = round(sum(duration for _, duration in events_within_window) / len(events_within_window), 2)
             else:
