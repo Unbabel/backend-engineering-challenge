@@ -15,8 +15,9 @@ def read_events_from_file(input_file: str) -> List[Dict]:
     """
     events = []
     if input_file:
-        with open(input_file, 'r') as file:
-            events = [json.loads(line) for line in file]
+         with open(input_file, 'r') as file:
+            for line in file:
+                yield json.loads(line)
     return events
 
 def remove_old_events(event_queue: List[tuple], timestamp: datetime, window_size: int) -> None:
@@ -43,6 +44,7 @@ def filter_events_within_window(event_queue: List[tuple], window_start_time: dat
     Returns:
         list: List of tuples containing (timestamp, duration) within the window.
     """
+        
     return [(time, duration) for time, duration in event_queue if window_start_time <= time <= current_time]
 
 def calculate_moving_average(input_file: str, window_size: int) -> None:
@@ -60,6 +62,7 @@ def calculate_moving_average(input_file: str, window_size: int) -> None:
 
     for event in events:
         timestamp = datetime.strptime(event['timestamp'], '%Y-%m-%d %H:%M:%S.%f')
+        timestamp = timestamp.replace(second=0, microsecond=0)
         duration = event['duration']
         event_queue.append((timestamp, duration))
 
@@ -68,7 +71,8 @@ def calculate_moving_average(input_file: str, window_size: int) -> None:
         current_time = timestamp
         window_start_time = current_time - timedelta(minutes=window_size)
 
-        while event_queue and event_queue[0][0] < current_time:
+        while event_queue and event_queue[0][0] <= current_time:
+            # Filter events within the current time window [current_minute - window_size, current_minute]
             events_within_window = filter_events_within_window(event_queue, window_start_time, current_time)
 
             if events_within_window:
