@@ -87,16 +87,21 @@ def calculate_moving_average(input_file: str, window_size: int) -> None:
 
     save_to_file(average_delivery_times)
 
-def save_to_file(average_time: List[Dict[str, Union[str, float]]]) -> None:
+def save_to_file(average_time: List[Dict[str, Union[str, float]]], output_file: str = 'output.json') -> None:
     """
-    Save moving average delivery times to a file and print them.
+    Save moving average delivery times to file.
 
     Parameters:
         average_time (list): List of dictionaries containing date and average delivery time.
+        output_file (str): Path to the output JSON file. Default is 'output.json'.
     """
     average_time.sort(key=lambda x: x["date"])
-    for mv in average_time:
-        print(mv)
+
+    with open(output_file, 'w') as file:
+        json.dump(average_time, file, indent=2)
+
+    print(f"Moving average delivery times saved to {output_file}")
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Calculate moving average delivery time.')
