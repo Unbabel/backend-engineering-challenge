@@ -23,7 +23,7 @@ pip install -r requirements.txt
 ```
 
 # Usage
-
+The code to calculate the moving average of an event resides inside the **main.py** file.
 To calculate the moving average delivery time, run the script with the input JSON file and window size. Example:
 ```bash
 python3 main.py --input_file=input.json --window_size=10
@@ -34,6 +34,7 @@ python3 main.py --input_file=input.json --window_size=10
 The results will be saved to an output file.
 
 # Running Tests
+The code to calculate the moving average of an event resides inside the **events_test.py** file.
 ```bash
 python -m unittest events_test.py 
 ```
