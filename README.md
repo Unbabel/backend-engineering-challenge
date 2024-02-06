@@ -13,20 +13,20 @@ This Python script calculates the moving average delivery time based on events r
 
 1. Clone the repository:
 ```bash
-   git clone https://github.com/thisIsMailson/moving-average-calculator.git
-   cd moving-average-calculator
+git clone https://github.com/thisIsMailson/moving-average-calculator.git
+cd moving-average-calculator
 ```
 
 2. Install dependencies
 ```bash
-	pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
 # Usage
 
 To calculate the moving average delivery time, run the script with the input JSON file and window size. Example:
 ```bash
-	python3 main.py --input_file=input.json --window_size=10
+python3 main.py --input_file=input.json --window_size=10
 ```
 -- input_file: Path to the input JSON file.
 -- window_size: Size of the time window for the moving average.
@@ -35,7 +35,7 @@ The results will be saved to an output file.
 
 # Running Tests
 ```bash
-	python -m unittest events_test.py 
+python -m unittest events_test.py 
 ```
 
 ## Sample Data
