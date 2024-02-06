@@ -44,6 +44,6 @@ For testing purposes, you can use the provided sample JSON file sample_data.json
 
 # File Structure
 
-    * calculate_moving_average.py: Main script for calculating the moving average.
-    * test_calculate_moving_average.py: Test cases for the script.
-    * sample_data.json: Sample input data for testing.
+ * calculate_moving_average.py: Main script for calculating the moving average.
+ * test_calculate_moving_average.py: Test cases for the script.
+ * sample_data.json: Sample input data for testing.
