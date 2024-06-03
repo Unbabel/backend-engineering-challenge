@@ -1,0 +1,27 @@
+# Translation Delivery Time CLI
+
+This command line application calculates the moving average delivery time of translation events based on a specified window size.
+
+## Requirements
+
+- Python 3.7.x or higher
+
+## Installation
+
+1. Clone or download the repository to your local machine.
+2. Ensure you have Python installed.
+
+## Usage
+
+Run the application from the command line with the following command:
+python unbabel_cli.py --input_file events.json --window_size 10
+
+
+Replace `events.json` with the path to your input JSON file containing translation events and `10` with your desired window size.
+
+## Testing
+
+To test the application, you can run the unit tests provided in the `tests-unbabel-cli.py` file. Use the following command:
+python -m unittest tests_unbabel_cli.py
+
+DISCLAIMER: Unfortunatly the output is not as expected, the code is what I could do with the time I had
