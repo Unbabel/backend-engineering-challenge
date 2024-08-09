@@ -1,86 +1,82 @@
-# Backend Engineering Challenge
+# Unbabel Backend Engineering Challenge - Sequential Processing Approach
+
+This project implements a sequential processing approach to calculate the moving average of translation delivery times. It processes events in chronological order using a sliding window, designed for memory efficiency and simplicity.
+
+## Features
+
+- **Sequential Processing**: Efficiently processes events in order.
+- **Memory Efficiency**: Utilizes a deque for managing the sliding window.
+- **Comprehensive Error Handling**: Robust error handling for file operations and JSON parsing.
+- **Logging**: Provides detailed logging for tracking execution and debugging.
 
 
-Welcome to our Engineering Challenge repository 🖖
+## Requirements
 
-If you found this repository it probably means that you are participating in our recruitment process. Thank you for your time and energy. If that's not the case please take a look at our [openings](https://unbabel.com/careers/) and apply!
+- Python 3.7 or higher
+- pandas
 
-Please fork this repo before you start working on the challenge, read it careful and take your time and think about the solution. Also, please fork this repository because we will evaluate the code on the fork.
+## Installation
 
-This is an opportunity for us both to work together and get to know each other in a more technical way. If you have any questions please open and issue and we'll reach out to help.
+1. Clone the repository:
 
-Good luck!
+   ```bash
+   git clone https://github.com/komalparakh05/backend-engineering-challenge.git
+   cd backend-engineering-challenge
 
-## Challenge Scenario
 
-At Unbabel we deal with a lot of translation data. One of the metrics we use for our clients' SLAs is the delivery time of a translation. 
+2. Create a virtual environment and install dependencies:
 
-In the context of this problem, and to keep things simple, our translation flow is going to be modeled as only one event.
+	```bash
+ 	python -m venv venv
+	.\venv\Scripts\activate  # On Windows
+	# source venv/bin/activate  # On macOS/Linux
+	pip install -r requirements.txt
 
-### *translation_delivered*
+
+## Usage
+
+Run the script with the following command:
+
+	
+	python unbabel_cli.py --input_file <path_to_input_file> --window_size <window_size_in_minutes> [--chunk_size <chunk_size>]
 
 Example:
 
-```json
-{
-	"timestamp": "2018-12-26 18:12:19.903159",
-	"translation_id": "5aa5b2f39f7254a75aa4",
-	"source_language": "en",
-	"target_language": "fr",
-	"client_name": "airliberty",
-	"event_name": "translation_delivered",
-	"duration": 20,
-	"nr_words": 100
-}
-```
-
-## Challenge Objective
-
-Your mission is to build a simple command line application that parses a stream of events and produces an aggregated output. In this case, we're interested in calculating, for every minute, a moving average of the translation delivery time for the last X minutes.
-
-If we want to count, for each minute, the moving average delivery time of all translations for the past 10 minutes we would call your application like (feel free to name it anything you like!).
-
-	unbabel_cli --input_file events.json --window_size 10
 	
-The input file format would be something like:
+	python unbabel_cli.py --input_file events.json --window_size 10 --chunk_size 50000
 
-	{"timestamp": "2018-12-26 18:11:08.509654","translation_id": "5aa5b2f39f7254a75aa5","source_language": "en","target_language": "fr","client_name": "airliberty","event_name": "translation_delivered","nr_words": 30, "duration": 20}
-	{"timestamp": "2018-12-26 18:15:19.903159","translation_id": "5aa5b2f39f7254a75aa4","source_language": "en","target_language": "fr","client_name": "airliberty","event_name": "translation_delivered","nr_words": 30, "duration": 31}
-	{"timestamp": "2018-12-26 18:23:19.903159","translation_id": "5aa5b2f39f7254a75bb3","source_language": "en","target_language": "fr","client_name": "taxi-eats","event_name": "translation_delivered","nr_words": 100, "duration": 54}
 
-Assume that the lines in the input are ordered by the `timestamp` key, from lower (oldest) to higher values, just like in the example input above.
+## Testing
 
-The output file would be something in the following format.
+To test the code, you can create unit tests using a framework like unittest or pytest. Ensure your tests cover key functionalities such as parsing input, calculating averages, and handling errors. Here's how to set up pytest:
 
-```
-{"date": "2018-12-26 18:11:00", "average_delivery_time": 0}
-{"date": "2018-12-26 18:12:00", "average_delivery_time": 20}
-{"date": "2018-12-26 18:13:00", "average_delivery_time": 20}
-{"date": "2018-12-26 18:14:00", "average_delivery_time": 20}
-{"date": "2018-12-26 18:15:00", "average_delivery_time": 20}
-{"date": "2018-12-26 18:16:00", "average_delivery_time": 25.5}
-{"date": "2018-12-26 18:17:00", "average_delivery_time": 25.5}
-{"date": "2018-12-26 18:18:00", "average_delivery_time": 25.5}
-{"date": "2018-12-26 18:19:00", "average_delivery_time": 25.5}
-{"date": "2018-12-26 18:20:00", "average_delivery_time": 25.5}
-{"date": "2018-12-26 18:21:00", "average_delivery_time": 25.5}
-{"date": "2018-12-26 18:22:00", "average_delivery_time": 31}
-{"date": "2018-12-26 18:23:00", "average_delivery_time": 31}
-{"date": "2018-12-26 18:24:00", "average_delivery_time": 42.5}
-```
+Install pytest:
 
-#### Notes
+	
+	pip install pytest
 
-Before jumping right into implementation we advise you to think about the solution first. We will evaluate, not only if your solution works but also the following aspects:
+Run tests using:
 
-+ Simple and easy to read code. Remember that [simple is not easy](https://www.infoq.com/presentations/Simple-Made-Easy)
-+ Comment your code. The easier it is to understand the complex parts, the faster and more positive the feedback will be
-+ Consider the optimizations you can do, given the order of the input lines
-+ Include a README.md that briefly describes how to build and run your code, as well as how to **test it**
-+ Be consistent in your code. 
+	
+	pytest
 
-Feel free to, in your solution, include some your considerations while doing this challenge. We want you to solve this challenge in the language you feel most comfortable with. Our machines run Python (3.7.x or higher) or Go (1.16.x or higher). If you are thinking of using any other programming language please reach out to us first 🙏.
+**Refer to the `test_unbabel_cli.py` script for details on how to use `pytest`.**
 
-Also, if you have any problem please **open an issue**. 
 
-Good luck and may the force be with you
+## Design Considerations
+
+- **Order of Processing**: Designed to efficiently handle ordered input data.
+- **Memory Optimization**: Uses a deque to minimize memory usage while managing the sliding window.
+- **Error Resilience**: Incorporates error handling to ensure robust execution.
+- **Transparency**: Provides logging to help understand the processing flow and diagnose issues..
+
+
+## Alternative Approach
+
+An alternative approach that focuses on streaming processing and real-time data handling is available in the `streaming_approach` branch. 
+
+To explore this alternative approach, check out the `streaming_approach` branch:
+
+git checkout streaming_approach
+
+This alternative solution showcases additional data engineering skills and provides a more comprehensive approach to the challenge.
